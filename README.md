@@ -11,3 +11,6 @@ Learn about kotlin coroutines and Flows by reading notes/kotlin_coroutines_and_k
 
 ### Dagger-Hilt dependency injection
 Learn about dependency injection by reading notes/dagger_hilt_dependency_injection.pdf and include some dependency injection in one of your projects.
+
+### Room local database
+Learn about local storage by reading notes/room_local_database.pdf and use a room database in one of your projects or try upgrading the project mentioned in that pdf.
