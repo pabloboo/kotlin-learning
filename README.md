@@ -14,3 +14,6 @@ Learn about dependency injection by reading notes/dagger_hilt_dependency_injecti
 
 ### Room local database
 Learn about local storage by reading notes/room_local_database.pdf and use a room database in one of your projects or try upgrading the project mentioned in that pdf.
+
+### Testing
+Start by reading notes/guide_android_testing.pdf and implementing a unit test, integration test and end-to-end test in one of your projects.
