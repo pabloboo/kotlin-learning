@@ -17,3 +17,5 @@ Learn about local storage by reading notes/room_local_database.pdf and use a roo
 
 ### Testing
 Start by reading notes/guide_android_testing.pdf and implementing a unit test, integration test and end-to-end test in one of your projects.
+
+You can also follow a tutorial on google's new compose preview screenshot testing in notes/compose_preview_screenshot_testing.pdf.
