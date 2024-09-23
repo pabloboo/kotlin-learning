@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Run Tracker</string>
-    <string name="google_maps_key">AIzaSyAGEieu-HVYlYVwoQcKl4PGVYOV17_BNVY</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">ENTER YOUR API KEY HERE</string>
 </resources>
