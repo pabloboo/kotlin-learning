@@ -33,3 +33,9 @@ Get SHA-1 app fingerprint: [See tutorial](https://stackoverflow.com/questions/27
 Maps SDK for android quickstart: [See tutorial](https://developers.google.com/maps/documentation/android-sdk/start).
 
 # Run Entity & Run Dao
+
+The Run Entity will be the data class that will represent the run in the database.
+
+The Run Dao will be the interface that will define the operations that we can do with the database.
+
+The best practice with data types in timestamps is to use the same data type for all timestamps and then have functions that convert them to the needed format.
