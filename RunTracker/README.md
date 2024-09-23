@@ -48,3 +48,41 @@ By using the @TypeConverter annotation, Room will know that this function should
 
 In the RunningDatabase we need to specify, using annotations, the entities that we want to store in the database and the type converters that we want to use.
 Since we are using Dagger for dependency injection, we don't need to ensure that the database is a singleton.
+
+# What is Dagger
+
+Dagger is a dependency injection framework that is used to reduce the boilerplate code that is needed to provide dependencies to classes.
+A dependency is a kotlin object or variable. If objectA relies on objectB then objectB is a dependency of objectA.
+
+```kotlin
+data class Person(
+    val name: String,
+    val age: Int,
+    val hometown: String
+)
+```
+The Person class has three dependencies: name, age, and hometown.
+
+```kotlin
+val name = "Pablo"
+val age = 24
+val hometown = "O Pino"
+val person = Person(name, age, hometown)
+```
+When we create an instance of the Person class, we need to provide the dependencies.
+
+This can quickly become a problem when we have a lot of dependencies or when we have dependencies that are used in multiple classes.
+For example the following code has dependencies that also need other dependencies:
+![what_is_dagger_01.png](doc/what_is_dagger_01.png)
+
+The solution to this problem is to use a dependency injection framework like Dagger.
+By using the @Inject annotation, Dagger will know that this class needs to be provided by Dagger. 
+This way instead of having the code that provides the dependencies in the class that needs them, we can have a separate class that provides the dependencies.
+
+![what_is_dagger_02.png](doc/what_is_dagger_02.png)
+
+Dagger also lets control the scope of the dependencies (the lifetime). For example, we can have a singleton dependency that is only created once and then reused in all the classes that need it.
+
+![what_is_dagger_03.png](doc/what_is_dagger_03.png)
+
+This feature won't be used in this project since it is a small app that won't benefit from scoping in terms of performance improvement.
