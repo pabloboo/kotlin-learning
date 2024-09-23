@@ -39,3 +39,12 @@ The Run Entity will be the data class that will represent the run in the databas
 The Run Dao will be the interface that will define the operations that we can do with the database.
 
 The best practice with data types in timestamps is to use the same data type for all timestamps and then have functions that convert them to the needed format.
+
+# Running Database & TypeConverter
+
+We need a type converter to convert the img Bitmap to a type that can be stored in Room and vice versa.
+
+By using the @TypeConverter annotation, Room will know that this function should be used to convert the data.
+
+In the RunningDatabase we need to specify, using annotations, the entities that we want to store in the database and the type converters that we want to use.
+Since we are using Dagger for dependency injection, we don't need to ensure that the database is a singleton.
