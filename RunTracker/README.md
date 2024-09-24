@@ -86,3 +86,17 @@ Dagger also lets control the scope of the dependencies (the lifetime). For examp
 ![what_is_dagger_03.png](doc/what_is_dagger_03.png)
 
 This feature won't be used in this project since it is a small app that won't benefit from scoping in terms of performance improvement.
+
+# Dagger-Hilt Setup
+
+[Dagger-Hilt](https://developer.android.com/training/dependency-injection/hilt-android?hl=es-419) is a library that reduces the boilerplate code that is needed to use Dagger for dependency injection.
+
+The dependency `implementation(libs.androidx.hilt.lifecycle.viewmodel)` is no longer need, check [here](https://dagger.dev/hilt/view-model.html) on how to use Dagger-Hilt with ViewModels.
+
+After adding the dependencies we have to tell our app to use Dagger-Hilt as the dependency injection library. For that we have to create a new Application class and add it to the AndroidManifest.xml.
+
+Dagger needs to know how to create a RunningDatabase to then inject it. That is specified in the modules. The annotation @ApplicationContext is used to tell Dagger that the context is needed to create the RunningDatabase (it inserts the application context).
+
+By creating the function provideRunningDatabase we are telling Dagger that when a RunningDatabase is needed, it should use this function to create it.
+
+To inject a variable into an activity we have to annotate the activity with @AndroidEntryPoint and then use the @Inject annotation to tell Dagger that this variable should be injected.
