@@ -1,4 +1,4 @@
-package com.pabloboo.runtracker
+package com.pabloboo.runtracker.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

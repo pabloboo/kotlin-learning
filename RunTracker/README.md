@@ -100,3 +100,15 @@ Dagger needs to know how to create a RunningDatabase to then inject it. That is 
 By creating the function provideRunningDatabase we are telling Dagger that when a RunningDatabase is needed, it should use this function to create it.
 
 To inject a variable into an activity we have to annotate the activity with @AndroidEntryPoint and then use the @Inject annotation to tell Dagger that this variable should be injected.
+
+# Architectural Skeleton
+
+The architecture skeleton of an app is the basic structure of the project. We will have the foundation to build on later.
+
+To setup Timber we only have to add the dependency and then call Timber.plant(Timber.DebugTree()) in the onCreate of the Application class.
+
+In an MVVM architecture the job of the repository is to collect the data from the different data sources (in this case the Room database) and then provide it to the view model.
+
+The job of the MainViewModel is to get the data from the repository and then provide it to the view (in this case the fragments of the app).
+
+To inject the view model into the fragment we have to create a val to inject the view model and add the @AndroidEntryPoint annotation to the fragment.
