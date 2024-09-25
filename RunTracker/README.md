@@ -136,3 +136,12 @@ If the user permanently denies the permission, we have to show a dialog that exp
 Each map has its own lifecycle. We have to make sure that the map is correctly initialized and destroyed when the fragment is created and destroyed.
 
 Add a map to your Android app (Kotlin with Compose) following this [tutorial](https://developers.google.com/codelabs/maps-platform/maps-platform-101-compose#0)
+
+# Tracking Service Basic Setup
+
+The TrackingService will be a foreground service that will track the user's location.
+
+For the activity-service communication and fragment-service communication we are going to use intents. 
+Whenever we want to send a command to our service we will simply send an intent to the service with the action and in the service receive the action and act accordingly.
+
+We also have to worry about the communication from the service to the tracking fragment. For that we will use a singleton pattern. Put the properties in a companion object inside the service and then access them from the fragment.

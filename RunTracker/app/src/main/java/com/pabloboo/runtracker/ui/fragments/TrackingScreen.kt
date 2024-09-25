@@ -1,5 +1,7 @@
 package com.pabloboo.runtracker.ui.fragments
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -12,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.google.maps.android.compose.GoogleMap
+import com.pabloboo.runtracker.services.TrackingService
 
 @Composable
 fun TrackingScreen(
@@ -106,6 +109,12 @@ fun Map(
         )
     }
 }
+
+fun sendCommandToService(context: Context, action: String) =
+    Intent(context, TrackingService::class.java).also {
+        it.action = action
+        context.startService(it)
+    }
 
 @Preview
 @Composable

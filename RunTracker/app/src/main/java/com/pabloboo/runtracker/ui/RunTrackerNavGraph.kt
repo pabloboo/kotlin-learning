@@ -2,6 +2,7 @@ package com.pabloboo.runtracker.ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,6 +13,8 @@ import com.pabloboo.runtracker.ui.fragments.SettingsScreen
 import com.pabloboo.runtracker.ui.fragments.SetupScreen
 import com.pabloboo.runtracker.ui.fragments.StatisticsScreen
 import com.pabloboo.runtracker.ui.fragments.TrackingScreen
+import com.pabloboo.runtracker.ui.fragments.sendCommandToService
+import com.pabloboo.runtracker.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 
 @Composable
 fun RunTrackerNavGraph(
@@ -66,10 +69,14 @@ fun RunTrackerNavGraph(
         }
 
         composable(RunTrackerDestinations.TRACKING_SCREEN) {
+            val context = LocalContext.current
             TrackingScreen(
                 timerText = "",
                 isRunning = true,
-                onToggleRun = { /* logic to toggle run */ },
+                onToggleRun = {
+                    /* logic to toggle run */
+                    sendCommandToService(context, ACTION_START_OR_RESUME_SERVICE)
+                },
                 onFinishRun = { /* logic to finish run */ },
                 userName = "user name",
                 isUserNameVisible = true,
