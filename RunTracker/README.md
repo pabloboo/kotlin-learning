@@ -124,3 +124,9 @@ This [todo app](https://github.com/android/architecture-samples/tree/main) is an
 RunTrackerNavGraph.kt contains the structure of the navigation system and RunTrackerNavigation.kt define the actions that can be performed to facilitate navigation between screens.
 
 [Here](https://medium.com/@bharadwaj.rns/bottom-navigation-in-jetpack-compose-using-material3-c153ccbf0593) is a step by step on how to build a bottom navigation in Jetpack Compose.
+
+# Handling Location Permissions
+
+EasyPermissions is a library that simplifies the process of requesting permissions in Android.
+
+If the user permanently denies the permission, we have to show a dialog that explains why the permission is needed and then send the user to the settings to enable the permission.
