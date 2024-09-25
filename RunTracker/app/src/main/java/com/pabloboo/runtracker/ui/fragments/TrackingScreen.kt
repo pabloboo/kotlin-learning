@@ -11,6 +11,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.maps.android.compose.GoogleMap
 
 @Composable
 fun TrackingScreen(
@@ -24,13 +25,14 @@ fun TrackingScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Temporary placeholder for the map view
+        // Map
         Box(
             modifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
-                .background(Color.Blue)
-        )
+        ) {
+            Map(paddingValues = PaddingValues(0.dp))
+        }
 
         // Inner layout for controls
         Box(
@@ -84,6 +86,24 @@ fun TrackingScreen(
                     .padding(vertical = 16.dp)
             )
         }
+    }
+}
+
+@Composable
+fun Map(
+    paddingValues: PaddingValues,
+) {
+    var isMapLoaded by remember { mutableStateOf(false) }
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(paddingValues)
+    ) {
+        GoogleMap(
+            modifier = Modifier.fillMaxSize(),
+            onMapLoaded = { isMapLoaded = true }
+        )
     }
 }
 

@@ -130,3 +130,9 @@ RunTrackerNavGraph.kt contains the structure of the navigation system and RunTra
 EasyPermissions is a library that simplifies the process of requesting permissions in Android.
 
 If the user permanently denies the permission, we have to show a dialog that explains why the permission is needed and then send the user to the settings to enable the permission.
+
+# Handling the Map's Lifecycle
+
+Each map has its own lifecycle. We have to make sure that the map is correctly initialized and destroyed when the fragment is created and destroyed.
+
+Add a map to your Android app (Kotlin with Compose) following this [tutorial](https://developers.google.com/codelabs/maps-platform/maps-platform-101-compose#0)

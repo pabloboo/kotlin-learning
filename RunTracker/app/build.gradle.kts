@@ -108,6 +108,13 @@ dependencies {
     implementation(libs.play.services.location)
     implementation(libs.play.services.maps)
 
+    // Google Maps Compose library
+    implementation("com.google.maps.android:maps-compose:4.4.1")
+    // Google Maps Compose utility library
+    implementation("com.google.maps.android:maps-compose-utils:4.4.1")
+    // Google Maps Compose widgets library
+    implementation("com.google.maps.android:maps-compose-widgets:4.4.1")
+
     // Dagger Core
     implementation(libs.dagger)
     ksp(libs.dagger.compiler)
