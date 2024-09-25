@@ -131,4 +131,7 @@ dependencies {
 
     // MPAndroidChart
     implementation(libs.mpandroidchart)
+
+    // Jetpack Compose navigation
+    implementation(libs.androidx.navigation.compose)
 }

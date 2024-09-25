@@ -112,3 +112,15 @@ In an MVVM architecture the job of the repository is to collect the data from th
 The job of the MainViewModel is to get the data from the repository and then provide it to the view (in this case the fragments of the app).
 
 To inject the view model into the fragment we have to create a val to inject the view model and add the @AndroidEntryPoint annotation to the fragment.
+
+# Setting up Navigation
+
+In the nav_graph.xml we have to add the fragments that we want to navigate to. We also have to add the actions that will be used to navigate between the fragments.
+
+Check [here](https://developer.android.com/guide/navigation#add-navhost) how to add navigation. And [here](https://developer.android.com/develop/ui/compose/navigation) to know more about navigation with Jetpack Compose.
+
+This [todo app](https://github.com/android/architecture-samples/tree/main) is an example of an app built with Jetpack Compose using a single-activity architecture with Navigation Compose.
+
+RunTrackerNavGraph.kt contains the structure of the navigation system and RunTrackerNavigation.kt define the actions that can be performed to facilitate navigation between screens.
+
+[Here](https://medium.com/@bharadwaj.rns/bottom-navigation-in-jetpack-compose-using-material3-c153ccbf0593) is a step by step on how to build a bottom navigation in Jetpack Compose.
