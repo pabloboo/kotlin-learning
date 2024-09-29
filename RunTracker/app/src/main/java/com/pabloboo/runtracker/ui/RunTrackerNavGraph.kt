@@ -6,7 +6,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.github.mikephil.charting.charts.LineChart
 import com.pabloboo.runtracker.ui.fragments.RunScreen
 import com.pabloboo.runtracker.ui.fragments.SettingsScreen
@@ -19,7 +18,7 @@ import com.pabloboo.runtracker.utils.Constants.ACTION_START_OR_RESUME_SERVICE
 @Composable
 fun RunTrackerNavGraph(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController(),
+    navController: NavHostController,
     startDestination: String = RunTrackerDestinations.SETUP_SCREEN
 ) {
     NavHost(

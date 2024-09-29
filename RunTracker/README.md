@@ -1,6 +1,7 @@
 # Run Tracker
 
-[Tutorial](https://www.youtube.com/watch?v=XqkFTG10sRk&list=PLQkwcJG4YTCQ6emtoqSZS2FVwZR9FT3BV&index=2&ab_channel=PhilippLackner)
+This is the basic [tutorial](https://www.youtube.com/watch?v=XqkFTG10sRk&list=PLQkwcJG4YTCQ6emtoqSZS2FVwZR9FT3BV&index=2&ab_channel=PhilippLackner) I followed.
+I changed the UI to a more modern one using Jetpack Compose, updated the dependencies and also added some features.
 
 # Project Overview and Architecture
 
@@ -145,3 +146,11 @@ For the activity-service communication and fragment-service communication we are
 Whenever we want to send a command to our service we will simply send an intent to the service with the action and in the service receive the action and act accordingly.
 
 We also have to worry about the communication from the service to the tracking fragment. For that we will use a singleton pattern. Put the properties in a companion object inside the service and then access them from the fragment.
+
+# Making our service a foreground service
+
+A foreground service must come with a notification. The notification is used to tell the user that the service is running and to give the user the option to stop the service.
+This way the android system knows that the service is important to the user and won't kill it.
+
+The code of this chapter creates a notification that is shown when the service is started and by clicking on the notification the user is taken to the tracking screen.
+

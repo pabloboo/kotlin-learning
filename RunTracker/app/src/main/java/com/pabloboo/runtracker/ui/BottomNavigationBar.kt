@@ -17,13 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavHostController
 import com.pabloboo.runtracker.R
 
 @Composable
-fun BottomNavigationBar() {
+fun BottomNavigationBar(navController: NavHostController) {
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
-    val navController = rememberNavController()
 
     // Listen for navigation changes
     var showBottomBar by remember { mutableStateOf(false) }
