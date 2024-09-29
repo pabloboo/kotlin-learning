@@ -28,6 +28,7 @@ playServicesLocation = "21.3.0"
 playServicesMaps = "19.0.0"
 roomRuntime = "2.6.1"
 timber = "5.0.1"
+runtimeLivedata = "1.7.2"
 
 [libraries]
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "activityCompose" }
@@ -81,6 +82,7 @@ mpandroidchart = { module = "com.github.PhilJay:MPAndroidChart", version.ref = "
 play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
 play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+androidx-runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "runtimeLivedata" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -18,6 +18,7 @@ import androidx.core.app.NotificationCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -41,7 +42,6 @@ import com.pabloboo.runtracker.utils.TrackingUtility
 import timber.log.Timber
 
 typealias Polyline = MutableList<LatLng>
-typealias Polylines = MutableList<Polyline>
 
 class TrackingService : Service(), LifecycleOwner {
 
@@ -54,12 +54,15 @@ class TrackingService : Service(), LifecycleOwner {
 
     companion object {
         val isTracking = MutableLiveData<Boolean>()
-        val pathPoints = MutableLiveData<Polylines>()
+
+        private val _pathPoints = MutableLiveData<Polyline>()
+        val pathPoints: LiveData<Polyline>
+            get() = _pathPoints
     }
 
     private fun postInitialValues() {
         isTracking.postValue(false)
-        pathPoints.postValue(mutableListOf())
+        _pathPoints.postValue(mutableListOf())
     }
 
     override fun onCreate() {
@@ -86,6 +89,7 @@ class TrackingService : Service(), LifecycleOwner {
                         isFirstRun = false
                     } else {
                         Timber.d("Resumed service")
+                        startForegroundService()
                     }
                 }
                 ACTION_PAUSE_SERVICE -> {
@@ -135,23 +139,18 @@ class TrackingService : Service(), LifecycleOwner {
         }
     }
 
-    private fun addEmptyPolyline() = pathPoints.value?.apply {
-        add(mutableListOf())
-        pathPoints.postValue(this)
-    } ?: pathPoints.postValue(mutableListOf(mutableListOf()))
-
     private fun addPathPoint(location: Location?) {
         location?.let {
             val pos = LatLng(location.latitude, location.longitude)
-            pathPoints.value?.apply {
-                last().add(pos)
-                pathPoints.postValue(this)
+            _pathPoints.value?.apply {
+                add(pos)
+                _pathPoints.postValue(this)
             }
         }
     }
 
     private fun pauseTracking() {
-        // Lógica para pausar el seguimiento
+        isTracking.postValue(false)
     }
 
     private fun stopTracking() {
@@ -164,7 +163,6 @@ class TrackingService : Service(), LifecycleOwner {
     }
 
     private fun startForegroundService() {
-        addEmptyPolyline()
         isTracking.postValue(true)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

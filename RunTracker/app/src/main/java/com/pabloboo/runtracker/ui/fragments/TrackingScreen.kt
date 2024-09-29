@@ -15,8 +15,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.Observer
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Polyline
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.pabloboo.runtracker.services.Polyline
 import com.pabloboo.runtracker.services.TrackingService
+import com.pabloboo.runtracker.utils.Constants.MAP_ZOOM
+import com.pabloboo.runtracker.utils.Constants.POLYLINE_WIDTH
+import timber.log.Timber
 
 @Composable
 fun TrackingScreen(
@@ -98,7 +108,39 @@ fun TrackingScreen(
 fun Map(
     paddingValues: PaddingValues,
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val pathPointsObserved = remember { TrackingService.pathPoints }
+    var pathPointsValues by remember { mutableStateOf(mutableListOf<LatLng>()) }
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = Observer<Polyline> { polyline ->
+            // this block will be called whenever pathPointsObserved changes
+            Timber.d("pathPoints changed: $polyline")
+            if (polyline.isNotEmpty()) {
+                pathPointsValues = pathPointsValues.toMutableList().apply {
+                    add(polyline.last())
+                }
+            }
+        }
+
+        pathPointsObserved.observe(lifecycleOwner, observer)
+
+        onDispose {
+            pathPointsObserved.removeObserver(observer)
+        }
+    }
+
     var isMapLoaded by remember { mutableStateOf(false) }
+    val cameraPositionState = rememberCameraPositionState()
+
+    // Move the camera after the map is loaded and the points are updated
+    LaunchedEffect(isMapLoaded, pathPointsValues) {
+        if (isMapLoaded && pathPointsValues.isNotEmpty()) {
+            cameraPositionState.animate(
+                CameraUpdateFactory.newLatLngZoom(pathPointsValues.last(), MAP_ZOOM)
+            )
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -107,8 +149,17 @@ fun Map(
     ) {
         GoogleMap(
             modifier = Modifier.fillMaxSize(),
-            onMapLoaded = { isMapLoaded = true }
-        )
+            onMapLoaded = {
+                isMapLoaded = true
+            },
+            cameraPositionState = cameraPositionState,
+        ) {
+            Polyline(
+                points = pathPointsValues,
+                color = Color.Red,
+                width = POLYLINE_WIDTH
+            )
+        }
 
         if (!isMapLoaded) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
