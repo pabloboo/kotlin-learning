@@ -2,6 +2,8 @@ package com.pabloboo.runtracker.ui.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
@@ -107,14 +109,25 @@ fun Map(
             modifier = Modifier.fillMaxSize(),
             onMapLoaded = { isMapLoaded = true }
         )
+
+        if (!isMapLoaded) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        }
     }
 }
 
-fun sendCommandToService(context: Context, action: String) =
-    Intent(context, TrackingService::class.java).also {
-        it.action = action
-        context.startService(it)
+@RequiresApi(Build.VERSION_CODES.O)
+fun sendCommandToService(context: Context, action: String) {
+    val intent = Intent(context, TrackingService::class.java).apply {
+        this.action = action
     }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        context.startForegroundService(intent)
+    } else {
+        context.startService(intent)
+    }
+}
+
 
 @Preview
 @Composable

@@ -154,3 +154,7 @@ This way the android system knows that the service is important to the user and 
 
 The code of this chapter creates a notification that is shown when the service is started and by clicking on the notification the user is taken to the tracking screen.
 
+# Tracking User Location in the Background
+
+pathPoints is MutableLiveData<MutableList<MutableList<LatLng>>>() because it needs to be a list of lists in case a user stops and starts the tracking again (if the user does that
+the two tracks shouldn't be connected, that's why it is a list of lists).
