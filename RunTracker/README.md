@@ -168,3 +168,9 @@ With the current code it doesn't permit to stop and resume a run because there i
 # Implementing the Stop Watch
 
 There is a calculation for time in millis and in time without millis. The timer is managed in the TrackingService and observed in the TrackingScreen.
+
+# Updating the Notification
+
+We will be using dependency injection in the notification. The notification will be updated with the time and the distance of the run.
+
+To update a notification we have to put a new notification with the same id.
