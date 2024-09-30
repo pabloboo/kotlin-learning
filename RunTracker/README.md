@@ -164,3 +164,7 @@ the two tracks shouldn't be connected, that's why it is a list of lists).
 The Map of the RunningScreen is subscribed to the changes in location written in the TrackingService.
 
 With the current code it doesn't permit to stop and resume a run because there is only a list of LatLng, not a list of lists of LatLng.
+
+# Implementing the Stop Watch
+
+There is a calculation for time in millis and in time without millis. The timer is managed in the TrackingService and observed in the TrackingScreen.

@@ -15,7 +15,7 @@ import com.pabloboo.runtracker.ui.fragments.SetupScreen
 import com.pabloboo.runtracker.ui.fragments.StatisticsScreen
 import com.pabloboo.runtracker.ui.fragments.TrackingScreen
 import com.pabloboo.runtracker.ui.fragments.sendCommandToService
-import com.pabloboo.runtracker.utils.Constants.ACTION_START_OR_RESUME_SERVICE
+import com.pabloboo.runtracker.utils.Constants.ACTION_START_SERVICE
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -73,11 +73,9 @@ fun RunTrackerNavGraph(
         composable(RunTrackerDestinations.TRACKING_SCREEN) {
             val context = LocalContext.current
             TrackingScreen(
-                timerText = "",
-                isRunning = false,
                 onToggleRun = {
                     /* logic to toggle run */
-                    sendCommandToService(context, ACTION_START_OR_RESUME_SERVICE)
+                    sendCommandToService(context, ACTION_START_SERVICE)
                 },
                 onFinishRun = { /* logic to finish run */ },
                 userName = "user name",

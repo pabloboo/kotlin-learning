@@ -26,17 +26,31 @@ import com.pabloboo.runtracker.services.Polyline
 import com.pabloboo.runtracker.services.TrackingService
 import com.pabloboo.runtracker.utils.Constants.MAP_ZOOM
 import com.pabloboo.runtracker.utils.Constants.POLYLINE_WIDTH
+import com.pabloboo.runtracker.utils.TrackingUtility
 import timber.log.Timber
 
 @Composable
 fun TrackingScreen(
-    timerText: String,
-    isRunning: Boolean,
     onToggleRun: () -> Unit,
     onFinishRun: () -> Unit,
     userName: String,
     isUserNameVisible: Boolean
 ) {
+
+    // Observe the isTracking and the run time
+    var isRunning by remember { mutableStateOf(false) }
+    TrackingService.isTracking.observe(LocalLifecycleOwner.current) { isTracking ->
+        isRunning = isTracking
+    }
+
+    var currentTimeInMillis: Long
+    var timerText by remember { mutableStateOf("") }
+    TrackingService.timeRunInMillis.observe(LocalLifecycleOwner.current) { timeInMillis ->
+        currentTimeInMillis = timeInMillis
+        val formattedTime = TrackingUtility.getFormattedStopWatchTime(currentTimeInMillis, true)
+        timerText = formattedTime
+    }
+
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -66,27 +80,29 @@ fun TrackingScreen(
             )
 
             // Toggle Run Button
-            val toggleRunText = if (isRunning) "Stop" else "Start"
-            Button(
-                onClick = {
-                    onToggleRun()
-                },
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(end = 8.dp)
-            ) {
-                Text(text = toggleRunText)
+            if (!isRunning) {
+                Button(
+                    onClick = {
+                        onToggleRun()
+                    },
+                    modifier = Modifier
+                        .align(Alignment.BottomStart)
+                        .padding(end = 8.dp)
+                ) {
+                    Text(text = "Start")
+                }
             }
 
             // Finish Run Button
-            Button(
-                onClick = {
-                    onFinishRun()
-                },
-                modifier = Modifier.align(Alignment.BottomEnd),
-                enabled = isRunning // Only enabled if running
-            ) {
-                Text(text = "Finish Run")
+            if (isRunning) {
+                Button(
+                    onClick = {
+                        onFinishRun()
+                    },
+                    modifier = Modifier.align(Alignment.BottomEnd)
+                ) {
+                    Text(text = "Finish Run")
+                }
             }
         }
 
@@ -184,8 +200,6 @@ fun sendCommandToService(context: Context, action: String) {
 @Composable
 fun PreviewTrackingScreen() {
     TrackingScreen(
-        timerText = "00:00:00:00",
-        isRunning = false,
         onToggleRun = {},
         onFinishRun = {},
         userName = "John Doe",
