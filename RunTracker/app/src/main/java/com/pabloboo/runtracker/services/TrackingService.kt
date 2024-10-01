@@ -28,8 +28,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.maps.model.LatLng
 import com.pabloboo.runtracker.R
-import com.pabloboo.runtracker.ui.MainActivity
-import com.pabloboo.runtracker.utils.Constants.ACTION_SHOW_TRACKING_SCREEN
 import com.pabloboo.runtracker.utils.Constants.ACTION_START_SERVICE
 import com.pabloboo.runtracker.utils.Constants.ACTION_STOP_SERVICE
 import com.pabloboo.runtracker.utils.Constants.FASTEST_LOCATION_INTERVAL
@@ -51,6 +49,8 @@ typealias Polyline = MutableList<LatLng>
 
 @AndroidEntryPoint
 class TrackingService : Service(), LifecycleOwner {
+
+    private var serviceKilled = false
 
     override val lifecycle: Lifecycle
         get() = lifecycleRegistry
@@ -108,8 +108,7 @@ class TrackingService : Service(), LifecycleOwner {
                 }
                 ACTION_STOP_SERVICE -> {
                     Timber.d("Stopped service")
-                    stopTracking()
-                    stopSelf()
+                    killService()
                 }
             }
         }
@@ -148,10 +147,12 @@ class TrackingService : Service(), LifecycleOwner {
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-        currentNotificationBuilder = baseNotificationBuilder
-            .addAction(R.drawable.ic_pause, "Stop", pendingIntent)
+        if (!serviceKilled) {
+            currentNotificationBuilder = baseNotificationBuilder
+                .addAction(R.drawable.ic_pause, "Stop", pendingIntent)
 
-        notificationManager.notify(NOTIFICATION_ID, currentNotificationBuilder.build())
+            notificationManager.notify(NOTIFICATION_ID, currentNotificationBuilder.build())
+        }
     }
 
     // Location tracking logic
@@ -219,9 +220,11 @@ class TrackingService : Service(), LifecycleOwner {
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
         timeRunInSeconds.observe(this) {
-            val notification = currentNotificationBuilder
-                .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
-            notificationManager.notify(NOTIFICATION_ID, notification.build())
+            if (!serviceKilled) {
+                val notification = currentNotificationBuilder
+                    .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
+                notificationManager.notify(NOTIFICATION_ID, notification.build())
+            }
         }
 
         updateNotificationTrackingState()
@@ -234,5 +237,13 @@ class TrackingService : Service(), LifecycleOwner {
             NOTIFICATION_CHANNEL_NAME,
             IMPORTANCE_LOW)
         notificationManager.createNotificationChannel(channel)
+    }
+
+    // Stop the service
+    private fun killService() {
+        serviceKilled = true
+        postInitialValues()
+        stopForeground(STOP_FOREGROUND_REMOVE)
+        stopSelf()
     }
 }

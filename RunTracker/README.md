@@ -174,3 +174,7 @@ There is a calculation for time in millis and in time without millis. The timer 
 We will be using dependency injection in the notification. The notification will be updated with the time and the distance of the run.
 
 To update a notification we have to put a new notification with the same id.
+
+# Canceling a Run
+
+When the user cancels a run we have to stop the service, delete the notification and don't save the run.

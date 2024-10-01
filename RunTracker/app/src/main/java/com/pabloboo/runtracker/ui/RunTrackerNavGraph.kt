@@ -78,6 +78,7 @@ fun RunTrackerNavGraph(
                     sendCommandToService(context, ACTION_START_SERVICE)
                 },
                 onFinishRun = { /* logic to finish run */ },
+                onCancelRun = { RunTrackerNavigationActions(navController).navigateToRunScreen() },
                 userName = "user name",
                 isUserNameVisible = true,
             )

@@ -5,12 +5,15 @@ import android.content.Intent
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -22,23 +25,28 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.services.Polyline
 import com.pabloboo.runtracker.services.TrackingService
+import com.pabloboo.runtracker.utils.Constants.ACTION_STOP_SERVICE
 import com.pabloboo.runtracker.utils.Constants.MAP_ZOOM
 import com.pabloboo.runtracker.utils.Constants.POLYLINE_WIDTH
 import com.pabloboo.runtracker.utils.TrackingUtility
 import timber.log.Timber
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TrackingScreen(
     onToggleRun: () -> Unit,
     onFinishRun: () -> Unit,
+    onCancelRun: () -> Unit,
     userName: String,
     isUserNameVisible: Boolean
 ) {
 
     // Observe the isTracking and the run time
     var isRunning by remember { mutableStateOf(false) }
+    var showCancelDialog by remember { mutableStateOf(false) }
     TrackingService.isTracking.observe(LocalLifecycleOwner.current) { isTracking ->
         isRunning = isTracking
     }
@@ -54,6 +62,34 @@ fun TrackingScreen(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
+        // Top Bar
+        if (isRunning) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(50.dp)
+                    .background(Color(0xFF1976D2))
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_close),
+                    contentDescription = "Cancel Run",
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(10.dp)
+                        .clickable(onClick = {
+                            showCancelDialog = true
+                        })
+                )
+            }
+        }
+
+        if (showCancelDialog) (
+            ShowCancelTrackingDialog(
+                onDismiss = { showCancelDialog = false },
+                onCancelRun = onCancelRun
+            )
+        )
+
         // Map
         Box(
             modifier = Modifier
@@ -195,13 +231,62 @@ fun sendCommandToService(context: Context, action: String) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onCancelRun: () -> Unit) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(text = "Cancel the Run") },
+        text = { Text(text = "Are you sure you want to cancel the run and delete all its data?") },
+        icon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_delete),
+                contentDescription = "Delete",
+                tint = Color.Red
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    // Cancel the run
+                    stopRun(context)
+                    onCancelRun()
+                }
+            ) {
+                Text(text = "Yes")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = {
+                    // Dismiss the dialog
+                    onDismiss()
+                }
+            ) {
+                Text(text = "No")
+            }
+        }
+    )
+}
 
+@RequiresApi(Build.VERSION_CODES.O)
+private fun stopRun(context: Context) {
+    sendCommandToService(
+        context = context,
+        action = ACTION_STOP_SERVICE
+    )
+}
+
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun PreviewTrackingScreen() {
     TrackingScreen(
         onToggleRun = {},
         onFinishRun = {},
+        onCancelRun = {},
         userName = "John Doe",
         isUserNameVisible = false
     )
