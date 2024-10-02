@@ -1,5 +1,7 @@
 package com.pabloboo.runtracker.ui
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -19,9 +21,11 @@ import androidx.compose.ui.res.vectorResource
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.pabloboo.runtracker.R
+import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BottomNavigationBar(navController: NavHostController) {
+fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewModel) {
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
 
     // Listen for navigation changes
@@ -61,7 +65,7 @@ fun BottomNavigationBar(navController: NavHostController) {
             }
         }
     ) { innerPadding ->
-        RunTrackerNavGraph(navController = navController, modifier = Modifier.padding(innerPadding))
+        RunTrackerNavGraph(navController = navController, modifier = Modifier.padding(innerPadding), viewModel = viewModel)
     }
 }
 

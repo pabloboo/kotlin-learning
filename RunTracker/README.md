@@ -178,3 +178,7 @@ To update a notification we have to put a new notification with the same id.
 # Canceling a Run
 
 When the user cancels a run we have to stop the service, delete the notification and don't save the run.
+
+# Save a Run in the Database
+
+When clicking the "finish run" button we have to stop the service, save the run in the database and navigate to the run screen.

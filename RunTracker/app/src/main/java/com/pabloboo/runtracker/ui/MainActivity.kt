@@ -1,10 +1,13 @@
 package com.pabloboo.runtracker.ui
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -14,13 +17,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.pabloboo.runtracker.ui.theme.RunTrackerTheme
+import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.ACTION_SHOW_TRACKING_SCREEN
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var startDestination by mutableStateOf(RunTrackerDestinations.SETUP_SCREEN)
+    private val viewModel: MainViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -35,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RunTrackerTheme {
-                MainScreen(startDestination)
+                MainScreen(startDestination, viewModel)
             }
         }
     }
@@ -57,20 +63,22 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(startDestination: String) {
+fun MainScreen(startDestination: String, viewModel: MainViewModel) {
     val navController = rememberNavController()
 
     // Use a Scaffold to include the BottomNavigationBar
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController)
+            BottomNavigationBar(navController, viewModel)
         }
     ) { innerPadding ->
         RunTrackerNavGraph(
             navController = navController,
             modifier = Modifier.padding(innerPadding),
-            startDestination = startDestination
+            startDestination = startDestination,
+            viewModel = viewModel
         )
     }
 }

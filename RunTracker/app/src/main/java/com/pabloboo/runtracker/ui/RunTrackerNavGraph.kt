@@ -15,14 +15,17 @@ import com.pabloboo.runtracker.ui.fragments.SetupScreen
 import com.pabloboo.runtracker.ui.fragments.StatisticsScreen
 import com.pabloboo.runtracker.ui.fragments.TrackingScreen
 import com.pabloboo.runtracker.ui.fragments.sendCommandToService
+import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.ACTION_START_SERVICE
+import com.pabloboo.runtracker.utils.Constants.ACTION_STOP_SERVICE
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RunTrackerNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    startDestination: String = RunTrackerDestinations.SETUP_SCREEN
+    startDestination: String = RunTrackerDestinations.SETUP_SCREEN,
+    viewModel: MainViewModel
 ) {
     NavHost(
         navController = navController,
@@ -77,10 +80,14 @@ fun RunTrackerNavGraph(
                     /* logic to toggle run */
                     sendCommandToService(context, ACTION_START_SERVICE)
                 },
-                onFinishRun = { /* logic to finish run */ },
-                onCancelRun = { RunTrackerNavigationActions(navController).navigateToRunScreen() },
+                onFinishRun = {
+                    /* logic to finish run */
+                    sendCommandToService(context, ACTION_STOP_SERVICE)
+                },
+                onGoBack = { RunTrackerNavigationActions(navController).navigateToRunScreen() },
                 userName = "user name",
                 isUserNameVisible = true,
+                viewModel = viewModel
             )
         }
     }

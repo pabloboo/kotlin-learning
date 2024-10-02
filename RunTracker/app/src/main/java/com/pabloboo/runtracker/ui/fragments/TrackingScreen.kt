@@ -20,29 +20,41 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Observer
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapEffect
+import com.google.maps.android.compose.MapsComposeExperimentalApi
 import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.pabloboo.runtracker.R
+import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.services.Polyline
 import com.pabloboo.runtracker.services.TrackingService
+import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.ACTION_STOP_SERVICE
 import com.pabloboo.runtracker.utils.Constants.MAP_ZOOM
 import com.pabloboo.runtracker.utils.Constants.POLYLINE_WIDTH
 import com.pabloboo.runtracker.utils.TrackingUtility
 import timber.log.Timber
+import java.util.Calendar
+import kotlin.math.round
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TrackingScreen(
     onToggleRun: () -> Unit,
     onFinishRun: () -> Unit,
-    onCancelRun: () -> Unit,
+    onGoBack: () -> Unit,
     userName: String,
-    isUserNameVisible: Boolean
+    isUserNameVisible: Boolean,
+    viewModel: MainViewModel
 ) {
+    var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
+    var runFinished by remember { mutableStateOf(false) }
 
     // Observe the isTracking and the run time
     var isRunning by remember { mutableStateOf(false) }
@@ -51,7 +63,7 @@ fun TrackingScreen(
         isRunning = isTracking
     }
 
-    var currentTimeInMillis: Long
+    var currentTimeInMillis: Long = 0
     var timerText by remember { mutableStateOf("") }
     TrackingService.timeRunInMillis.observe(LocalLifecycleOwner.current) { timeInMillis ->
         currentTimeInMillis = timeInMillis
@@ -86,7 +98,7 @@ fun TrackingScreen(
         if (showCancelDialog) (
             ShowCancelTrackingDialog(
                 onDismiss = { showCancelDialog = false },
-                onCancelRun = onCancelRun
+                onGoBack = onGoBack
             )
         )
 
@@ -96,7 +108,9 @@ fun TrackingScreen(
                 .weight(1f)
                 .fillMaxWidth()
         ) {
-            Map(paddingValues = PaddingValues(0.dp))
+            Map(paddingValues = PaddingValues(0.dp)) { map ->
+                googleMap = map
+            }
         }
 
         // Inner layout for controls
@@ -116,7 +130,7 @@ fun TrackingScreen(
             )
 
             // Toggle Run Button
-            if (!isRunning) {
+            if (!isRunning && !runFinished) {
                 Button(
                     onClick = {
                         onToggleRun()
@@ -133,7 +147,20 @@ fun TrackingScreen(
             if (isRunning) {
                 Button(
                     onClick = {
+                        googleMap?.let {
+                            zoomToSeeWholeTrack(
+                                googleMap = it
+                            )
+                        }
+                        if (currentTimeInMillis > 0) {
+                            endRunAndSaveToDb(
+                                googleMap = googleMap!!,
+                                currentTimeInMillis = currentTimeInMillis,
+                                viewModel = viewModel
+                            )
+                        }
                         onFinishRun()
+                        runFinished = true
                     },
                     modifier = Modifier.align(Alignment.BottomEnd)
                 ) {
@@ -153,12 +180,30 @@ fun TrackingScreen(
                     .padding(vertical = 16.dp)
             )
         }
+
+        if (runFinished) {
+            Snackbar(
+                action = {
+                    Button(
+                        onClick = {
+                            onGoBack()
+                        }
+                    ) {
+                        Text(text = "Go back")
+                    }
+                }
+            ) {
+                Text(text = "Run Finished!")
+            }
+        }
     }
 }
 
+@OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun Map(
     paddingValues: PaddingValues,
+    onMapReady: (GoogleMap) -> Unit
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
     val pathPointsObserved = remember { TrackingService.pathPoints }
@@ -211,11 +256,44 @@ fun Map(
                 color = Color.Red,
                 width = POLYLINE_WIDTH
             )
+
+            MapEffect(Unit) { map ->
+                onMapReady(map)
+            }
         }
 
         if (!isMapLoaded) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         }
+    }
+}
+
+private fun zoomToSeeWholeTrack(googleMap: GoogleMap)  {
+    val bounds = LatLngBounds.Builder()
+    TrackingService.pathPoints.value?.forEach { polyline ->
+        bounds.include(polyline)
+    }
+
+    // Move the camera to the bounds
+    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 50))
+}
+
+private fun endRunAndSaveToDb(googleMap: GoogleMap, currentTimeInMillis: Long, viewModel: MainViewModel) {
+    val weight = 80f
+
+    googleMap.snapshot { bitmap ->
+        val distanceInMeters = TrackingService.pathPoints.value?.let {
+            TrackingUtility.calculatePolylineLength(
+                it
+            ).toInt()
+        }
+        val avgSpeed = (distanceInMeters?.div(1000f))?.div((currentTimeInMillis / 1000f / 60 /60) * 10)
+            ?.let { round(it) }?.div(10f)
+        val dateTimestamp = Calendar.getInstance().timeInMillis
+        val caloriesBurned = ((distanceInMeters?.div(1000f))?.times(weight))?.toInt()
+
+        val run = Run(bitmap, dateTimestamp, avgSpeed!!, distanceInMeters, currentTimeInMillis, caloriesBurned!!)
+        viewModel.insertRun(run)
     }
 }
 
@@ -233,7 +311,7 @@ fun sendCommandToService(context: Context, action: String) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onCancelRun: () -> Unit) {
+fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onGoBack: () -> Unit) {
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -251,7 +329,7 @@ fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onCancelRun: () -> Unit) {
                 onClick = {
                     // Cancel the run
                     stopRun(context)
-                    onCancelRun()
+                    onGoBack()
                 }
             ) {
                 Text(text = "Yes")
@@ -286,8 +364,9 @@ fun PreviewTrackingScreen() {
     TrackingScreen(
         onToggleRun = {},
         onFinishRun = {},
-        onCancelRun = {},
+        onGoBack = {},
         userName = "John Doe",
-        isUserNameVisible = false
+        isUserNameVisible = false,
+        viewModel = viewModel()
     )
 }
