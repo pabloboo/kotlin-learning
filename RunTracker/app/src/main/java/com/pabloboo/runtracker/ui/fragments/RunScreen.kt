@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,6 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
+import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.REQUEST_CODE_LOCATION_PERMISSION
 import com.pabloboo.runtracker.utils.TrackingUtility.hasDeniedPermissionsPermanently
 import com.pabloboo.runtracker.utils.TrackingUtility.hasLocationPermissions
@@ -50,19 +52,21 @@ import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import java.util.concurrent.TimeUnit
 
 @Composable
 fun RunScreen(
     filterOptions: List<String>,
     selectedFilter: String,
     onFilterSelected: (String) -> Unit,
-    runs: List<Run>,
     onRunClick: (Run) -> Unit,
-    onAddRunClick: () -> Unit
+    onAddRunClick: () -> Unit,
+    viewModel: MainViewModel
 ) {
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
+    val runs by viewModel.runsSortedByDate.observeAsState(initial = emptyList())
 
     if (!hasLocationPermissions(context)) {
         requestPermissions(context)
@@ -187,9 +191,8 @@ fun RunItem(run: Run, onClick: (Run) -> Unit) {
 
         // Date and Time
         val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val timeFormatter = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
         val date = dateFormatter.format(Date(run.timestamp))
-        val time = timeFormatter.format(Date(run.timeInMillis))
+        val time = formatMillisToTime(run.timeInMillis)
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -198,11 +201,25 @@ fun RunItem(run: Run, onClick: (Run) -> Unit) {
         ) {
             Text(text = date, fontSize = 16.sp)
             Text(text = time, fontSize = 16.sp)
+        }
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(text = "${run.distanceInMeters / 1000f} km", fontSize = 16.sp)
             Text(text = "${run.avgSpeedInKMH} km/h", fontSize = 16.sp)
             Text(text = "${run.caloriesBurned} cal", fontSize = 16.sp)
         }
     }
+}
+
+fun formatMillisToTime(millis: Long): String {
+    val hours = TimeUnit.MILLISECONDS.toHours(millis)
+    val minutes = TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1)
+    val seconds = TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1)
+    return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds)
 }
 
 private fun requestPermissions(context: Context) {

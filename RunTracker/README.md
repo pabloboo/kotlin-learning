@@ -182,3 +182,7 @@ When the user cancels a run we have to stop the service, delete the notification
 # Save a Run in the Database
 
 When clicking the "finish run" button we have to stop the service, save the run in the database and navigate to the run screen.
+
+# Showing Runs in the RunScreen
+
+The RunScreen will show all the runs that are saved in the database.
