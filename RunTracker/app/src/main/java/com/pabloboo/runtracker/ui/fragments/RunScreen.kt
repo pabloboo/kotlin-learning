@@ -46,6 +46,7 @@ import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.REQUEST_CODE_LOCATION_PERMISSION
+import com.pabloboo.runtracker.utils.SortType
 import com.pabloboo.runtracker.utils.TrackingUtility.hasDeniedPermissionsPermanently
 import com.pabloboo.runtracker.utils.TrackingUtility.hasLocationPermissions
 import pub.devrel.easypermissions.EasyPermissions
@@ -56,17 +57,24 @@ import java.util.concurrent.TimeUnit
 
 @Composable
 fun RunScreen(
-    filterOptions: List<String>,
-    selectedFilter: String,
-    onFilterSelected: (String) -> Unit,
     onRunClick: (Run) -> Unit,
     onAddRunClick: () -> Unit,
     viewModel: MainViewModel
 ) {
+    val filterOptions = listOf("Date", "Time", "Avg speed", "Distance", "Calories burned")
+    var selectedFilter by remember { mutableStateOf("Date") }
     val context = LocalContext.current
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val runs by viewModel.runsSortedByDate.observeAsState(initial = emptyList())
+    when(viewModel.sortType) {
+        SortType.DATE -> filterOptions[0]
+        SortType.RUNNING_TIME -> filterOptions[1]
+        SortType.AVG_SPEED -> filterOptions[2]
+        SortType.DISTANCE -> filterOptions[3]
+        SortType.CALORIES_BURNED -> filterOptions[4]
+    }
+
+    val runs by viewModel.runs.observeAsState(initial = emptyList())
 
     if (!hasLocationPermissions(context)) {
         requestPermissions(context)
@@ -120,7 +128,18 @@ fun RunScreen(
                     DropdownMenu(
                         filterOptions = filterOptions,
                         selectedFilter = selectedFilter,
-                        onFilterSelected = onFilterSelected
+                        onFilterSelected = {
+                            when(it) {
+                                "Date" -> viewModel.sortRuns(SortType.DATE)
+                                "Time" -> viewModel.sortRuns(SortType.RUNNING_TIME)
+                                "Avg speed" -> viewModel.sortRuns(SortType.AVG_SPEED)
+                                "Distance" -> viewModel.sortRuns(SortType.DISTANCE)
+                                "Calories burned" -> viewModel.sortRuns(SortType.CALORIES_BURNED)
+                                else -> viewModel.sortRuns(SortType.DATE)
+                            }
+                            // Change selected filter
+                            selectedFilter = it
+                        }
                     )
                 }
 

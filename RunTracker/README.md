@@ -186,3 +186,7 @@ When clicking the "finish run" button we have to stop the service, save the run 
 # Showing Runs in the RunScreen
 
 The RunScreen will show all the runs that are saved in the database.
+
+# Sorting runs
+
+We will use a mediator LiveData so we can merge the LiveDatas of each sort type and then observe the merged live data in the screen.

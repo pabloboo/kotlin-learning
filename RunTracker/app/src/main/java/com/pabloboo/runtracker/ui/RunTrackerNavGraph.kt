@@ -44,9 +44,6 @@ fun RunTrackerNavGraph(
 
         composable(RunTrackerDestinations.RUN_SCREEN) {
             RunScreen(
-                filterOptions = listOf("Distance", "Time", "Pace"),
-                selectedFilter = "Distance",
-                onFilterSelected = { filter -> /* logic to update selected filter */ },
                 onRunClick = { run -> /* details of the run */ },
                 onAddRunClick = { RunTrackerNavigationActions(navController).navigateToTrackingScreen() },
                 viewModel = viewModel
