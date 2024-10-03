@@ -2,6 +2,7 @@ package com.pabloboo.runtracker.ui.fragments
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
@@ -36,6 +37,8 @@ import com.pabloboo.runtracker.services.Polyline
 import com.pabloboo.runtracker.services.TrackingService
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.ACTION_STOP_SERVICE
+import com.pabloboo.runtracker.utils.Constants.KEY_NAME
+import com.pabloboo.runtracker.utils.Constants.KEY_WEIGHT
 import com.pabloboo.runtracker.utils.Constants.MAP_ZOOM
 import com.pabloboo.runtracker.utils.Constants.POLYLINE_WIDTH
 import com.pabloboo.runtracker.utils.TrackingUtility
@@ -49,10 +52,11 @@ fun TrackingScreen(
     onToggleRun: () -> Unit,
     onFinishRun: () -> Unit,
     onGoBack: () -> Unit,
-    userName: String,
-    isUserNameVisible: Boolean,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    sharedPref: SharedPreferences,
 ) {
+    val name = sharedPref.getString(KEY_NAME, "") ?: ""
+    val weight = sharedPref.getFloat(KEY_WEIGHT, 80f)
     var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
     var runFinished by remember { mutableStateOf(false) }
 
@@ -75,13 +79,21 @@ fun TrackingScreen(
         modifier = Modifier.fillMaxSize()
     ) {
         // Top Bar
-        if (isRunning) {
-            Box(
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp)
+                .background(Color(0xFF1976D2))
+        ) {
+            Text(
+                text = "Let's go, $name!",
+                fontSize = 18.sp,
+                textAlign = TextAlign.Left,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(50.dp)
-                    .background(Color(0xFF1976D2))
-            ) {
+                    .align(Alignment.CenterStart)
+                    .padding(10.dp)
+            )
+            if (isRunning) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
                     contentDescription = "Cancel Run",
@@ -117,17 +129,19 @@ fun TrackingScreen(
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color(0xFF1976D2))
-                .padding(16.dp),
+                .height(70.dp)
+                .background(Color(0xFF1976D2)),
             contentAlignment = Alignment.Center
         ) {
             // Timer Text
-            Text(
-                text = timerText,
-                fontSize = 50.sp,
-                color = Color.White,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
+            if (isRunning || runFinished) {
+                Text(
+                    text = timerText,
+                    fontSize = 30.sp,
+                    color = Color.White,
+                    modifier = Modifier.align(Alignment.CenterStart).padding(10.dp)
+                )
+            }
 
             // Toggle Run Button
             if (!isRunning && !runFinished) {
@@ -136,8 +150,7 @@ fun TrackingScreen(
                         onToggleRun()
                     },
                     modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .padding(end = 8.dp)
+                        .align(Alignment.Center)
                 ) {
                     Text(text = "Start")
                 }
@@ -156,29 +169,18 @@ fun TrackingScreen(
                             endRunAndSaveToDb(
                                 googleMap = googleMap!!,
                                 currentTimeInMillis = currentTimeInMillis,
-                                viewModel = viewModel
+                                viewModel = viewModel,
+                                weight = weight
                             )
                         }
                         onFinishRun()
                         runFinished = true
                     },
-                    modifier = Modifier.align(Alignment.BottomEnd)
+                    modifier = Modifier.align(Alignment.CenterEnd).padding(10.dp)
                 ) {
                     Text(text = "Finish Run")
                 }
             }
-        }
-
-        // Let's go Text
-        if (isUserNameVisible) {
-            Text(
-                text = "Let's go, $userName!",
-                fontSize = 50.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-            )
         }
 
         if (runFinished) {
@@ -189,7 +191,7 @@ fun TrackingScreen(
                             onGoBack()
                         }
                     ) {
-                        Text(text = "Go back")
+                        Text(text = "Go to runs")
                     }
                 }
             ) {
@@ -278,9 +280,7 @@ private fun zoomToSeeWholeTrack(googleMap: GoogleMap)  {
     googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds.build(), 50))
 }
 
-private fun endRunAndSaveToDb(googleMap: GoogleMap, currentTimeInMillis: Long, viewModel: MainViewModel) {
-    val weight = 80f
-
+private fun endRunAndSaveToDb(googleMap: GoogleMap, currentTimeInMillis: Long, viewModel: MainViewModel, weight: Float) {
     googleMap.snapshot { bitmap ->
         val distanceInMeters = TrackingService.pathPoints.value?.let {
             TrackingUtility.calculatePolylineLength(
@@ -365,8 +365,7 @@ fun PreviewTrackingScreen() {
         onToggleRun = {},
         onFinishRun = {},
         onGoBack = {},
-        userName = "John Doe",
-        isUserNameVisible = false,
-        viewModel = viewModel()
+        viewModel = viewModel(),
+        sharedPref = LocalContext.current.getSharedPreferences("SHARED_PREF", Context.MODE_PRIVATE)
     )
 }

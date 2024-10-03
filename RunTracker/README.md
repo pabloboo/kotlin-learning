@@ -190,3 +190,7 @@ The RunScreen will show all the runs that are saved in the database.
 # Sorting runs
 
 We will use a mediator LiveData so we can merge the LiveDatas of each sort type and then observe the merged live data in the screen.
+
+# Saving Username and Weight
+
+We will write the functionality to enter the name and weight before using the app, use the name and weight and inject the shared preferences to the screens.

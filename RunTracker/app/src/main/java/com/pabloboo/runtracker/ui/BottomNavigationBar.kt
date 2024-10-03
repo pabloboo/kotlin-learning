@@ -1,5 +1,6 @@
 package com.pabloboo.runtracker.ui
 
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +26,7 @@ import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewModel) {
+fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewModel, sharedPref: SharedPreferences) {
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
 
     // Listen for navigation changes
@@ -65,7 +66,7 @@ fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewMod
             }
         }
     ) { innerPadding ->
-        RunTrackerNavGraph(navController = navController, modifier = Modifier.padding(innerPadding), viewModel = viewModel)
+        RunTrackerNavGraph(navController = navController, modifier = Modifier.padding(innerPadding), viewModel = viewModel, sharedPref = sharedPref)
     }
 }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.pabloboo.runtracker.db.RunningDatabase
 import com.pabloboo.runtracker.utils.Constants.RUNNING_DATABASE_NAME
+import com.pabloboo.runtracker.utils.Constants.SHARED_PREF_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -28,5 +29,10 @@ object AppModule {
     @Singleton
     @Provides
     fun provideRunDao(db: RunningDatabase) = db.getRunDAO()
+
+    @Provides
+    @Singleton
+    fun provideSharedPreferences(@ApplicationContext app: Context) =
+        app.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE)
 
 }

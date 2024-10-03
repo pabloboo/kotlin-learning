@@ -1,6 +1,7 @@
 package com.pabloboo.runtracker.ui
 
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -20,11 +21,15 @@ import com.pabloboo.runtracker.ui.theme.RunTrackerTheme
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.ACTION_SHOW_TRACKING_SCREEN
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var startDestination by mutableStateOf(RunTrackerDestinations.SETUP_SCREEN)
     private val viewModel: MainViewModel by viewModels()
+
+    @Inject
+    lateinit var sharedPref: SharedPreferences
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +46,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RunTrackerTheme {
-                MainScreen(startDestination, viewModel)
+                MainScreen(startDestination, viewModel, sharedPref)
             }
         }
     }
@@ -65,20 +70,21 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(startDestination: String, viewModel: MainViewModel) {
+fun MainScreen(startDestination: String, viewModel: MainViewModel, sharedPref: SharedPreferences) {
     val navController = rememberNavController()
 
     // Use a Scaffold to include the BottomNavigationBar
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController, viewModel)
+            BottomNavigationBar(navController, viewModel, sharedPref = sharedPref)
         }
     ) { innerPadding ->
         RunTrackerNavGraph(
             navController = navController,
             modifier = Modifier.padding(innerPadding),
             startDestination = startDestination,
-            viewModel = viewModel
+            viewModel = viewModel,
+            sharedPref = sharedPref
         )
     }
 }

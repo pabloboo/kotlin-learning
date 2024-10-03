@@ -1,10 +1,15 @@
 package com.pabloboo.runtracker.ui
 
+import android.content.SharedPreferences
 import android.os.Build
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.BackHandler
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -25,8 +30,27 @@ fun RunTrackerNavGraph(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     startDestination: String = RunTrackerDestinations.SETUP_SCREEN,
-    viewModel: MainViewModel
+    viewModel: MainViewModel,
+    sharedPref: SharedPreferences
 ) {
+
+    // Handle back press navigation -> only allow back navigation if the current destination is not the start destination
+    val backCallback = remember {
+        object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                if (navController.currentDestination?.route != navController.graph.findStartDestination().route) {
+                    navController.popBackStack()
+                }
+            }
+        }
+    }
+
+    BackHandler(onBack = {
+        if (navController.currentDestination?.route != RunTrackerDestinations.RUN_SCREEN) {
+            backCallback.handleOnBackPressed()
+        }
+    })
+
     NavHost(
         navController = navController,
         startDestination = startDestination,
@@ -34,11 +58,8 @@ fun RunTrackerNavGraph(
     ) {
         composable(RunTrackerDestinations.SETUP_SCREEN) {
             SetupScreen(
-                name = "Your name",
-                weight = 70.0.toString(),
-                onNameChange = { name -> /* logic to update name */ },
-                onWeightChange = { weight -> /* logic to update weight */ },
-                onContinueClick = { RunTrackerNavigationActions(navController).navigateToRunScreen() }
+                sharedPref = sharedPref,
+                goNextScreen = { RunTrackerNavigationActions(navController).navigateToRunScreen() }
             )
         }
 
@@ -62,11 +83,11 @@ fun RunTrackerNavGraph(
 
         composable(RunTrackerDestinations.SETTINGS_SCREEN) {
             SettingsScreen(
-                userName = "user name",
-                userWeight = 70.0.toString(),
-                onUserNameChange = { name -> /* logic to update user name */ },
-                onUserWeightChange = { weight -> /* logic to update user weight */ },
-                onApplyChanges = { /* logic to apply changes */ }
+                sharedPref = sharedPref,
+                onFinishSaving = {
+                    navController.popBackStack(navController.graph.startDestinationId, false)
+                    RunTrackerNavigationActions(navController).navigateToRunScreen()
+                }
             )
         }
 
@@ -82,9 +103,8 @@ fun RunTrackerNavGraph(
                     sendCommandToService(context, ACTION_STOP_SERVICE)
                 },
                 onGoBack = { RunTrackerNavigationActions(navController).navigateToRunScreen() },
-                userName = "user name",
-                isUserNameVisible = true,
-                viewModel = viewModel
+                viewModel = viewModel,
+                sharedPref = sharedPref
             )
         }
     }
