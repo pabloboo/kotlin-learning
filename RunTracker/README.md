@@ -194,3 +194,7 @@ We will use a mediator LiveData so we can merge the LiveDatas of each sort type 
 # Saving Username and Weight
 
 We will write the functionality to enter the name and weight before using the app, use the name and weight and inject the shared preferences to the screens.
+
+# Total Run Statistics
+
+We will observe all the changes in the StatisticsViewModel and then calculate the total distance, total time, total calories and the average speed to show them in the StatisticsScreen.

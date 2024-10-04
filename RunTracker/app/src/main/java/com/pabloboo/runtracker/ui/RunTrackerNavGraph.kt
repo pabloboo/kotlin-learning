@@ -21,6 +21,7 @@ import com.pabloboo.runtracker.ui.fragments.StatisticsScreen
 import com.pabloboo.runtracker.ui.fragments.TrackingScreen
 import com.pabloboo.runtracker.ui.fragments.sendCommandToService
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
+import com.pabloboo.runtracker.ui.viewmodels.StatisticsViewModel
 import com.pabloboo.runtracker.utils.Constants.ACTION_START_SERVICE
 import com.pabloboo.runtracker.utils.Constants.ACTION_STOP_SERVICE
 
@@ -31,6 +32,7 @@ fun RunTrackerNavGraph(
     navController: NavHostController,
     startDestination: String = RunTrackerDestinations.SETUP_SCREEN,
     viewModel: MainViewModel,
+    statisticsViewModel: StatisticsViewModel,
     sharedPref: SharedPreferences
 ) {
 
@@ -73,10 +75,7 @@ fun RunTrackerNavGraph(
 
         composable(RunTrackerDestinations.STATISTICS_SCREEN) {
             StatisticsScreen(
-                totalDistance = "",
-                totalTime = "",
-                totalCalories = "",
-                averageSpeed = ""
+                viewModel = statisticsViewModel
                 //chartData =
             )
         }

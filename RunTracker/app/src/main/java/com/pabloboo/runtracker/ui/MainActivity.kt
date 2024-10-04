@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.pabloboo.runtracker.ui.theme.RunTrackerTheme
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
+import com.pabloboo.runtracker.ui.viewmodels.StatisticsViewModel
 import com.pabloboo.runtracker.utils.Constants.ACTION_SHOW_TRACKING_SCREEN
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -27,6 +28,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
     private var startDestination by mutableStateOf(RunTrackerDestinations.SETUP_SCREEN)
     private val viewModel: MainViewModel by viewModels()
+    private val statisticsViewModel: StatisticsViewModel by viewModels()
 
     @Inject
     lateinit var sharedPref: SharedPreferences
@@ -46,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RunTrackerTheme {
-                MainScreen(startDestination, viewModel, sharedPref)
+                MainScreen(startDestination, viewModel, statisticsViewModel, sharedPref)
             }
         }
     }
@@ -70,13 +72,13 @@ class MainActivity : ComponentActivity() {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun MainScreen(startDestination: String, viewModel: MainViewModel, sharedPref: SharedPreferences) {
+fun MainScreen(startDestination: String, viewModel: MainViewModel, statisticsViewModel: StatisticsViewModel, sharedPref: SharedPreferences) {
     val navController = rememberNavController()
 
     // Use a Scaffold to include the BottomNavigationBar
     Scaffold(
         bottomBar = {
-            BottomNavigationBar(navController, viewModel, sharedPref = sharedPref)
+            BottomNavigationBar(navController = navController, viewModel = viewModel, statisticsViewModel = statisticsViewModel, sharedPref = sharedPref)
         }
     ) { innerPadding ->
         RunTrackerNavGraph(
@@ -84,6 +86,7 @@ fun MainScreen(startDestination: String, viewModel: MainViewModel, sharedPref: S
             modifier = Modifier.padding(innerPadding),
             startDestination = startDestination,
             viewModel = viewModel,
+            statisticsViewModel = statisticsViewModel,
             sharedPref = sharedPref
         )
     }

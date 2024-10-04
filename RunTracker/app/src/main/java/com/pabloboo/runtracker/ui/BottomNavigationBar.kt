@@ -23,10 +23,11 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
+import com.pabloboo.runtracker.ui.viewmodels.StatisticsViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewModel, sharedPref: SharedPreferences) {
+fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewModel, statisticsViewModel: StatisticsViewModel, sharedPref: SharedPreferences) {
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
 
     // Listen for navigation changes
@@ -66,7 +67,7 @@ fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewMod
             }
         }
     ) { innerPadding ->
-        RunTrackerNavGraph(navController = navController, modifier = Modifier.padding(innerPadding), viewModel = viewModel, sharedPref = sharedPref)
+        RunTrackerNavGraph(navController = navController, modifier = Modifier.padding(innerPadding), viewModel = viewModel, statisticsViewModel = statisticsViewModel, sharedPref = sharedPref)
     }
 }
 
