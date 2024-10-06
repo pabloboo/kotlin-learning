@@ -198,3 +198,7 @@ We will write the functionality to enter the name and weight before using the ap
 # Total Run Statistics
 
 We will observe all the changes in the StatisticsViewModel and then calculate the total distance, total time, total calories and the average speed to show them in the StatisticsScreen.
+
+# Setting up the BarChart
+
+The  BarChart will show the runs with the date on the x-axis and the distance on the y-axis. When clicking on a bar it will show the details of that run.

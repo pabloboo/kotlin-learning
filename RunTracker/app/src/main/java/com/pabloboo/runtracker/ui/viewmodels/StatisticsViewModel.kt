@@ -16,5 +16,5 @@ class StatisticsViewModel @Inject constructor(
     val totalAvgSpeed = mainRepository.getTotalAvgSpeed()
 
     // To show in the graph
-    val runsSortedByDate = mainRepository.getAllRunsSortedByDate()
+    val runsSortedByDateAscending = mainRepository.getAllRunsSortedByDateAscending()
 }

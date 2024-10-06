@@ -20,6 +20,9 @@ interface RunDAO {
     @Query("SELECT * FROM running_table ORDER BY timestamp DESC")
     fun getAllRunsSortedByDate(): LiveData<List<Run>>
 
+    @Query("SELECT * FROM running_table ORDER BY timestamp ASC")
+    fun getAllRunsSortedByDateAscending(): LiveData<List<Run>>
+
     @Query("SELECT * FROM running_table ORDER BY avgSpeedInKMH DESC")
     fun getAllRunsSortedByAvgSpeed(): LiveData<List<Run>>
 
