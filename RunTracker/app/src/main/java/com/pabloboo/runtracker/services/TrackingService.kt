@@ -5,6 +5,7 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_MUTABLE
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
 import android.app.Service
 import android.content.Context
@@ -143,7 +144,7 @@ class TrackingService : Service(), LifecycleOwner {
         val intent = Intent(this, TrackingService::class.java).apply {
             action = ACTION_STOP_SERVICE
         }
-        val pendingIntent = PendingIntent.getService(this, 1, intent, FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getService(this, 1, intent, FLAG_UPDATE_CURRENT or FLAG_MUTABLE)
 
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
