@@ -47,7 +47,7 @@ fun SetupScreen(
     var showSnackbarError by remember { mutableStateOf(false) }
 
     fun writePersonalDataToSharedPref(): Boolean {
-        if (name.isNotEmpty() && weight.isNotEmpty() && name.isNotBlank() && weight.isNotBlank()) {
+        if (name.isNotEmpty() && weight.isNotEmpty() && name.isNotBlank() && weight.isNotBlank() && weight.toFloatOrNull() != null) {
             sharedPref.edit()
                 .putString(KEY_NAME, name)
                 .putFloat(KEY_WEIGHT, weight.toFloat())
@@ -142,7 +142,7 @@ fun SetupScreen(
 
                 if (showSnackbarError) {
                     Snackbar() {
-                        Text(text = "Fill in all the fields!")
+                        Text(text = "Fill in all the fields correctly!")
                     }
                 }
             }
