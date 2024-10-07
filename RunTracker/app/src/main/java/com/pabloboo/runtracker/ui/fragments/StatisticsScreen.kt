@@ -34,16 +34,28 @@ import kotlin.math.round
 fun StatisticsScreen(
     viewModel: StatisticsViewModel
 ) {
-    val totalTimeRun = viewModel.totalTimeRun.observeAsState(initial = 0L)
-    val totalDistance = viewModel.totalDistance.observeAsState(initial = 0)
-    val totalCalories = viewModel.totalCaloriesBurned.observeAsState(initial = 0)
-    val totalAvgSpeed = viewModel.totalAvgSpeed.observeAsState(initial = 0f)
+    val totalTimeRun = viewModel.totalTimeRun.observeAsState()
+    val totalDistance = viewModel.totalDistance.observeAsState()
+    val totalCalories = viewModel.totalCaloriesBurned.observeAsState()
+    val totalAvgSpeed = viewModel.totalAvgSpeed.observeAsState()
     val runs = viewModel.runsSortedByDateAscending.observeAsState(initial = emptyList())
 
-    val formattedTotalTime = TrackingUtility.getFormattedStopWatchTime(totalTimeRun.value)
-    val formattedDistance = "${round(((totalDistance.value / 1000f) * 10f)) / 10f}km"
-    val formattedCalories = "${totalCalories.value}kcal"
-    val formattedSpeed = "${round(totalAvgSpeed.value * 10f) / 10f}km/h"
+    var formattedTotalTime = "00:00:00"
+    if (totalTimeRun.value != null) {
+        formattedTotalTime = TrackingUtility.getFormattedStopWatchTime(totalTimeRun.value!!)
+    }
+    var formattedDistance = "0km"
+    if (totalDistance.value != null) {
+        formattedDistance = "${round(((totalDistance.value!! / 1000f) * 10f)) / 10f}km"
+    }
+    var formattedCalories = "0kcal"
+    if (totalCalories.value != null) {
+        formattedCalories = "${totalCalories.value}kcal"
+    }
+    var formattedSpeed = "0km/h"
+    if (totalAvgSpeed.value != null) {
+        formattedSpeed = "${round(totalAvgSpeed.value!! * 10f) / 10f}km/h"
+    }
 
     val barData = runs.value.indices.map { i -> BarEntry(i.toFloat(), runs.value[i].distanceInMeters.toFloat()/1000f) }
 
