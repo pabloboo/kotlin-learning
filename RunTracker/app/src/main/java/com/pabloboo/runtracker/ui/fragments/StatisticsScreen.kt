@@ -2,6 +2,8 @@ package com.pabloboo.runtracker.ui.fragments
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
@@ -43,6 +45,9 @@ fun StatisticsScreen(
     val totalCalories = viewModel.totalCaloriesBurned.observeAsState()
     val totalAvgSpeed = viewModel.totalAvgSpeed.observeAsState()
     val runs = viewModel.runsSortedByDateAscending.observeAsState(initial = emptyList())
+    val get5000MetersRecord = viewModel.get5000MetersRecord.observeAsState()
+    val get10000MetersRecord = viewModel.get10000MetersRecord.observeAsState()
+    val get21000MetersRecord = viewModel.get21000MetersRecord.observeAsState()
 
     var formattedTotalTime = "00:00:00"
     if (totalTimeRun.value != null) {
@@ -68,6 +73,7 @@ fun StatisticsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(colorScheme.background)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -107,6 +113,40 @@ fun StatisticsScreen(
         // Bar Chart
         BarChartComposable(barData, runs.value)
 
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Records
+        RecordSection(
+            title = getString(context, R.string.record_5k),
+            value = if (get5000MetersRecord.value != null) {
+                "${TrackingUtility.getFormattedStopWatchTime(get5000MetersRecord.value!!.timeInMillis)} - ${round(((get5000MetersRecord.value!!.distanceInMeters / 1000f) * 10f)) / 10f}km"
+            } else {
+                getString(context, R.string.no_record)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        RecordSection(
+            title = getString(context, R.string.record_10k),
+            value = if (get10000MetersRecord.value != null) {
+                "${TrackingUtility.getFormattedStopWatchTime(get10000MetersRecord.value!!.timeInMillis)} - ${round(((get10000MetersRecord.value!!.distanceInMeters / 1000f) * 10f)) / 10f}km"
+            } else {
+                getString(context, R.string.no_record)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        RecordSection(
+            title = getString(context, R.string.record_21k),
+            value = if (get21000MetersRecord.value != null) {
+                "${TrackingUtility.getFormattedStopWatchTime(get21000MetersRecord.value!!.timeInMillis)} - ${round(((get21000MetersRecord.value!!.distanceInMeters / 1000f) * 10f)) / 10f}km"
+            } else {
+                getString(context, R.string.no_record)
+            }
+        )
+
     }
 }
 
@@ -130,13 +170,32 @@ fun StatSection(title: String, value: String) {
 }
 
 @Composable
+fun RecordSection(title: String, value: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = value,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            color = colorScheme.onBackground
+        )
+        Text(
+            text = title,
+            fontSize = 16.sp,
+            color = colorScheme.onBackground
+        )
+    }
+}
+
+@Composable
 fun BarChartComposable(chartData: List<BarEntry>, runs: List<Run>) {
     var selectedEntry by remember { mutableStateOf<BarEntry?>(null) }
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
+            .height(300.dp)
     ) {
         val onBackgroundColor = colorScheme.onBackground.toArgb()
         val contextVar = LocalContext.current

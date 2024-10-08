@@ -41,4 +41,8 @@
     <string name="delete_run">Delete run</string>
     <string name="delete_the_run">Delete the run</string>
     <string name="delete_the_run_confirmation">Are you sure you want to delete the run and remove all its data?</string>
+    <string name="no_record">No record</string>
+    <string name="record_5k">5k record</string>
+    <string name="record_10k">10k record</string>
+    <string name="record_21k">21k record</string>
 </resources>

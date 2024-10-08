@@ -51,4 +51,14 @@ interface RunDAO {
     @Query("SELECT SUM(distanceInMeters) FROM running_table")
     fun getTotalDistance(): LiveData<Int>
 
+    // get records
+    @Query("SELECT * FROM running_table WHERE distanceInMeters >= 5000 ORDER BY timeInMillis ASC LIMIT 1")
+    fun get5000MetersRecord(): LiveData<Run>
+
+    @Query("SELECT * FROM running_table WHERE distanceInMeters >= 10000 ORDER BY timeInMillis ASC LIMIT 1")
+    fun get10000MetersRecord(): LiveData<Run>
+
+    @Query("SELECT * FROM running_table WHERE distanceInMeters >= 21000 ORDER BY timeInMillis ASC LIMIT 1")
+    fun get21000MetersRecord(): LiveData<Run>
+
 }

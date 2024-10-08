@@ -40,4 +40,8 @@
     <string name="delete_run">Borrar carrera</string>
     <string name="delete_the_run">Borrar la carrera</string>
     <string name="delete_the_run_confirmation">¿Estás seguro de que quieres borrar la carrera y eliminar todos sus datos?</string>
+    <string name="no_record">No hay record</string>
+    <string name="record_5k">Record 5km</string>
+    <string name="record_10k">Record 10km</string>
+    <string name="record_21k">Record 21km</string>
 </resources>

@@ -17,4 +17,9 @@ class StatisticsViewModel @Inject constructor(
 
     // To show in the graph
     val runsSortedByDateAscending = mainRepository.getAllRunsSortedByDateAscending()
+
+    // Records
+    val get5000MetersRecord = mainRepository.get5000MetersRecord()
+    val get10000MetersRecord = mainRepository.get10000MetersRecord()
+    val get21000MetersRecord = mainRepository.get21000MetersRecord()
 }
