@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -20,6 +21,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -167,7 +170,7 @@ fun RunScreen(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(runs.size) { run ->
-                        RunItem(run = runs[run], onClick = onRunClick)
+                        RunItem(run = runs[run], onClick = onRunClick, viewModel = viewModel)
                         Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
@@ -210,13 +213,39 @@ fun DropdownMenu(
 }
 
 @Composable
-fun RunItem(run: Run, onClick: (Run) -> Unit) {
+fun RunItem(run: Run, onClick: (Run) -> Unit, viewModel: MainViewModel) {
+    var showDeleteRunDialog by remember { mutableStateOf(false) }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .background(colorScheme.surface)
             .padding(8.dp)
     ) {
+        // Delete run button
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_delete),
+                contentDescription = getString(LocalContext.current, R.string.delete_run),
+                tint = colorScheme.error,
+                modifier = Modifier
+                    .clickable {
+                        showDeleteRunDialog = true
+                    }
+            )
+        }
+
+        if (showDeleteRunDialog) {
+            ShowDeleteRunDialog(
+                onDismiss = { showDeleteRunDialog = false },
+                viewModel = viewModel,
+                run = run
+            )
+        }
+
         // Image
         run.img?.let {
             Image(
@@ -252,6 +281,44 @@ fun RunItem(run: Run, onClick: (Run) -> Unit) {
             Text(text = "${run.caloriesBurned} cal", fontSize = 16.sp, color = colorScheme.onSurface)
         }
     }
+}
+
+@Composable
+fun ShowDeleteRunDialog(onDismiss: () -> Unit, viewModel: MainViewModel, run: Run) {
+    val context = LocalContext.current
+    AlertDialog(
+        onDismissRequest = { onDismiss() },
+        title = { Text(text = getString(context, R.string.delete_the_run)) },
+        text = { Text(text = getString(context, R.string.delete_the_run_confirmation)) },
+        icon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_delete),
+                contentDescription = getString(context, R.string.delete),
+                tint = colorScheme.tertiary
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    // Delete the run
+                    viewModel.deleteRun(run)
+                    onDismiss()
+                }
+            ) {
+                Text(text = getString(context, R.string.yes))
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = {
+                    // Dismiss the dialog
+                    onDismiss()
+                }
+            ) {
+                Text(text = getString(context, R.string.no))
+            }
+        }
+    )
 }
 
 fun formatMillisToTime(millis: Long): String {

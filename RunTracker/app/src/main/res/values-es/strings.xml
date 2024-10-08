@@ -37,4 +37,7 @@
     <string name="statistics">Estadísticas</string>
     <string name="settings">Ajustes</string>
     <string name="duration">Duración</string>
+    <string name="delete_run">Borrar carrera</string>
+    <string name="delete_the_run">Borrar la carrera</string>
+    <string name="delete_the_run_confirmation">¿Estás seguro de que quieres borrar la carrera y eliminar todos sus datos?</string>
 </resources>

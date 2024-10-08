@@ -38,4 +38,7 @@
     <string name="statistics">Statistics</string>
     <string name="settings">Settings</string>
     <string name="duration">Duration</string>
+    <string name="delete_run">Delete run</string>
+    <string name="delete_the_run">Delete the run</string>
+    <string name="delete_the_run_confirmation">Are you sure you want to delete the run and remove all its data?</string>
 </resources>
