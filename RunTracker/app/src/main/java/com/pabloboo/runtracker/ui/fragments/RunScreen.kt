@@ -42,6 +42,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
@@ -61,9 +62,15 @@ fun RunScreen(
     onAddRunClick: () -> Unit,
     viewModel: MainViewModel
 ) {
-    val filterOptions = listOf("Date", "Time", "Avg speed", "Distance", "Calories burned")
-    var selectedFilter by remember { mutableStateOf("Date") }
     val context = LocalContext.current
+    val filterOptions = listOf(
+        getString(context, R.string.date),
+        getString(context, R.string.time),
+        getString(context, R.string.avg_speed),
+        getString(context, R.string.distance),
+        getString(context, R.string.calories_burned))
+    var selectedFilter by remember { mutableStateOf(getString(context, R.string.date)) }
+
     val snackbarHostState = remember { SnackbarHostState() }
 
     when(viewModel.sortType) {
@@ -84,8 +91,8 @@ fun RunScreen(
         // Show snackbar
         LaunchedEffect(Unit) {
             val result = snackbarHostState.showSnackbar(
-                message = "You need to accept location permissions to use this app.",
-                actionLabel = "Open Settings"
+                message = getString(context, R.string.need_to_accept_location_permissions),
+                actionLabel = getString(context, R.string.open_settings)
             )
             if (result == SnackbarResult.ActionPerformed) {
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
@@ -111,7 +118,7 @@ fun RunScreen(
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add),
-                    contentDescription = "Add Run",
+                    contentDescription = getString(context, R.string.add_run),
                     tint = colorScheme.onPrimary
                 )
             }
@@ -131,7 +138,7 @@ fun RunScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Sort by:",
+                        text = getString(context, R.string.sort_by),
                         fontSize = 16.sp,
                         color = colorScheme.onBackground
                     )
@@ -141,11 +148,11 @@ fun RunScreen(
                         selectedFilter = selectedFilter,
                         onFilterSelected = {
                             when(it) {
-                                "Date" -> viewModel.sortRuns(SortType.DATE)
-                                "Time" -> viewModel.sortRuns(SortType.RUNNING_TIME)
-                                "Avg speed" -> viewModel.sortRuns(SortType.AVG_SPEED)
-                                "Distance" -> viewModel.sortRuns(SortType.DISTANCE)
-                                "Calories burned" -> viewModel.sortRuns(SortType.CALORIES_BURNED)
+                                getString(context, R.string.date) -> viewModel.sortRuns(SortType.DATE)
+                                getString(context, R.string.time) -> viewModel.sortRuns(SortType.RUNNING_TIME)
+                                getString(context, R.string.avg_speed) -> viewModel.sortRuns(SortType.AVG_SPEED)
+                                getString(context, R.string.distance) -> viewModel.sortRuns(SortType.DISTANCE)
+                                getString(context, R.string.calories_burned) -> viewModel.sortRuns(SortType.CALORIES_BURNED)
                                 else -> viewModel.sortRuns(SortType.DATE)
                             }
                             // Change selected filter
@@ -161,6 +168,7 @@ fun RunScreen(
                 ) {
                     items(runs.size) { run ->
                         RunItem(run = runs[run], onClick = onRunClick)
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
             }
@@ -260,7 +268,7 @@ private fun requestPermissions(context: Context) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
         EasyPermissions.requestPermissions(
             context as Activity,
-            "You need to accept location permissions to use this app.",
+            getString(context, R.string.need_to_accept_location_permissions),
             REQUEST_CODE_LOCATION_PERMISSION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION
@@ -268,7 +276,7 @@ private fun requestPermissions(context: Context) {
     } else {
         EasyPermissions.requestPermissions(
             context as Activity,
-            "You need to accept location permissions to use this app.",
+            getString(context, R.string.need_to_accept_location_permissions),
             REQUEST_CODE_LOCATION_PERMISSION,
             Manifest.permission.ACCESS_FINE_LOCATION,
             Manifest.permission.ACCESS_COARSE_LOCATION,

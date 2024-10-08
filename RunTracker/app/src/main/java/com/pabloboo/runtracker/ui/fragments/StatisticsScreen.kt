@@ -13,10 +13,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat.getString
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
@@ -25,6 +27,7 @@ import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.ui.viewmodels.StatisticsViewModel
 import com.pabloboo.runtracker.utils.CustomMarkerView
@@ -60,6 +63,8 @@ fun StatisticsScreen(
 
     val barData = runs.value.indices.map { i -> BarEntry(i.toFloat(), runs.value[i].distanceInMeters.toFloat()/1000f) }
 
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -69,7 +74,7 @@ fun StatisticsScreen(
     ) {
         // Total Distance Section
         StatSection(
-            title = "Total Distance",
+            title = getString(context, R.string.total_distance),
             value = formattedDistance
         )
 
@@ -77,7 +82,7 @@ fun StatisticsScreen(
 
         // Total Time Section
         StatSection(
-            title = "Total Time",
+            title = getString(context, R.string.total_time),
             value = formattedTotalTime
         )
 
@@ -85,7 +90,7 @@ fun StatisticsScreen(
 
         // Total Calories Section
         StatSection(
-            title = "Total Calories Burned",
+            title = getString(context, R.string.total_calories_burned),
             value = formattedCalories
         )
 
@@ -93,7 +98,7 @@ fun StatisticsScreen(
 
         // Average Speed Section
         StatSection(
-            title = "Average Speed",
+            title = getString(context, R.string.average_speed),
             value = formattedSpeed
         )
 
@@ -134,10 +139,11 @@ fun BarChartComposable(chartData: List<BarEntry>, runs: List<Run>) {
             .height(500.dp)
     ) {
         val onBackgroundColor = colorScheme.onBackground.toArgb()
+        val contextVar = LocalContext.current
         AndroidView(
             factory = { context ->
                 BarChart(context).apply {
-                    val barDataSet = BarDataSet(chartData, "Distance Over Time").apply {
+                    val barDataSet = BarDataSet(chartData, getString(context, R.string.distance_over_time)).apply {
                         valueTextColor = onBackgroundColor
                         color = onBackgroundColor
                     }
@@ -163,7 +169,7 @@ fun BarChartComposable(chartData: List<BarEntry>, runs: List<Run>) {
                         setDrawGridLines(false)
                     }
 
-                    description.text = "Distance Over Time"
+                    description.text = getString(context, R.string.distance_over_time)
                     legend.isEnabled = false
 
                     invalidate() // Refresh the view
@@ -181,7 +187,7 @@ fun BarChartComposable(chartData: List<BarEntry>, runs: List<Run>) {
                 }
             },
             update = { chart ->
-                chart.data = BarData(BarDataSet(chartData, "Distance Over Time"))
+                chart.data = BarData(BarDataSet(chartData, getString(contextVar, R.string.distance_over_time)))
                 chart.invalidate()
             },
             modifier = Modifier.fillMaxSize()

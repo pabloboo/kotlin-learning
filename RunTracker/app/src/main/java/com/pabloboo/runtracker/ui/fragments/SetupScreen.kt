@@ -24,11 +24,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
+import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.utils.Constants.KEY_FIRST_TIME_TOGGLE
 import com.pabloboo.runtracker.utils.Constants.KEY_NAME
 import com.pabloboo.runtracker.utils.Constants.KEY_WEIGHT
@@ -60,6 +63,7 @@ fun SetupScreen(
         return false
     }
 
+    val context = LocalContext.current
     Scaffold(
         content = { paddingValues ->
             Column(
@@ -72,7 +76,7 @@ fun SetupScreen(
                 verticalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = "Welcome!\nPlease enter your name and weight.",
+                    text = getString(context, R.string.welcome),
                     fontSize = 30.sp,
                     textAlign = TextAlign.Center,
                     color = colorScheme.onBackground,
@@ -86,7 +90,7 @@ fun SetupScreen(
                     onValueChange = {
                         name = it
                     },
-                    label = { Text("Your Name") },
+                    label = { Text(getString(context, R.string.your_name)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 16.dp),
@@ -105,7 +109,7 @@ fun SetupScreen(
                         onValueChange = {
                             weight = it
                         },
-                        label = { Text("Your Weight") },
+                        label = { Text(getString(context, R.string.your_weight)) },
                         modifier = Modifier
                             .weight(1f)
                             .padding(end = 8.dp),
@@ -116,7 +120,7 @@ fun SetupScreen(
                         singleLine = true
                     )
                     Text(
-                        text = "kg",
+                        text = getString(context, R.string.kg),
                         fontSize = 24.sp,
                         color = colorScheme.onBackground,
                     )
@@ -139,7 +143,7 @@ fun SetupScreen(
                         colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary)
                     ) {
                         Text(
-                            "Continue",
+                            getString(context, R.string.continue_text),
                             fontSize = 22.sp,
                             color = colorScheme.onPrimary
                         )
@@ -151,7 +155,7 @@ fun SetupScreen(
                         containerColor = colorScheme.tertiary,
                         contentColor = colorScheme.onTertiary
                     ) {
-                        Text(text = "Fill in all the fields correctly!")
+                        Text(text = getString(context, R.string.fill_in_all_fields_correctly))
                     }
                 }
             }

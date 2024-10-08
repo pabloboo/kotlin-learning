@@ -9,8 +9,11 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getString
+import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.utils.Constants.KEY_FIRST_TIME_TOGGLE
 import com.pabloboo.runtracker.utils.Constants.KEY_NAME
 import com.pabloboo.runtracker.utils.Constants.KEY_WEIGHT
@@ -37,6 +40,8 @@ fun SettingsScreen(
         return false
     }
 
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -50,7 +55,7 @@ fun SettingsScreen(
             onValueChange = {
                 name = it
             },
-            label = { Text("Your Name") },
+            label = { Text(getString(context, R.string.your_name)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
@@ -62,7 +67,7 @@ fun SettingsScreen(
             onValueChange = {
                 weight = it
             },
-            label = { Text("Your Weight") },
+            label = { Text(getString(context, R.string.your_weight)) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number
@@ -87,7 +92,7 @@ fun SettingsScreen(
             modifier = Modifier.fillMaxWidth(),
             colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary)
         ) {
-            Text("Apply Changes")
+            Text(text = getString(context, R.string.apply_changes))
         }
 
         if (showSnackbarError) {
@@ -95,7 +100,7 @@ fun SettingsScreen(
                 containerColor = colorScheme.tertiary,
                 contentColor = colorScheme.onTertiary
             ) {
-                Text(text = "Fill in all the fields correctly!")
+                Text(text = getString(context, R.string.fill_in_all_fields_correctly))
             }
         }
         if (showSnackBarSuccess) {
@@ -103,7 +108,7 @@ fun SettingsScreen(
                 containerColor = colorScheme.secondary,
                 contentColor = colorScheme.onSecondary
             ) {
-                Text(text = "Changes saved!")
+                Text(text = getString(context, R.string.changes_saved))
             }
         }
     }

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="welcome">¡Bienvenido!\nPor favor, introduce tu nombre y peso.</string>
+    <string name="your_name">Tu Nombre</string>
+    <string name="your_weight">Tu Peso</string>
+    <string name="kg">kg</string>
+    <string name="continue_text">Continuar</string>
+    <string name="fill_in_all_fields_correctly">¡Completa todos los campos correctamente!</string>
+    <string name="apply_changes">Aplicar Cambios</string>
+    <string name="changes_saved">¡Cambios guardados!</string>
+    <string name="date">Fecha</string>
+    <string name="time">Tiempo</string>
+    <string name="avg_speed">Velocidad Promedio</string>
+    <string name="distance">Distancia</string>
+    <string name="calories_burned">Calorías quemadas</string>
+    <string name="need_to_accept_location_permissions">Necesitas aceptar los permisos de ubicación para usar esta aplicación.</string>
+    <string name="open_settings">Abrir Configuraciones</string>
+    <string name="add_run">Agregar Carrera</string>
+    <string name="sort_by">Ordenar por:</string>
+    <string name="lets_go">¡Vamos!</string>
+    <string name="cancel_run">Cancelar Carrera</string>
+    <string name="start">Iniciar</string>
+    <string name="finish_run">Terminar Carrera</string>
+    <string name="go_to_runs">Ir a Carreras</string>
+    <string name="run_finished">¡Carrera Terminada!</string>
+    <string name="cancel_the_run">Cancelar la Carrera</string>
+    <string name="cancel_the_run_confirmation">¿Estás seguro de que quieres cancelar la carrera y eliminar todos sus datos?</string>
+    <string name="delete">Eliminar</string>
+    <string name="yes">Sí</string>
+    <string name="no">No</string>
+    <string name="total_distance">Distancia Total</string>
+    <string name="total_time">Tiempo Total</string>
+    <string name="total_calories_burned">Total de Calorías Quemadas</string>
+    <string name="average_speed">Velocidad Promedio</string>
+    <string name="distance_over_time">Distancia a lo Largo del Tiempo</string>
+    <string name="run">Carreras</string>
+    <string name="statistics">Estadísticas</string>
+    <string name="settings">Ajustes</string>
+    <string name="duration">Duración</string>
+</resources>

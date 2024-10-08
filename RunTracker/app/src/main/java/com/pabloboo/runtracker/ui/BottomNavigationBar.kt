@@ -1,5 +1,6 @@
 package com.pabloboo.runtracker.ui
 
+import android.content.Context
 import android.content.SharedPreferences
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -18,7 +19,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.vectorResource
+import androidx.core.content.ContextCompat.getString
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.pabloboo.runtracker.R
@@ -29,11 +32,12 @@ import com.pabloboo.runtracker.ui.viewmodels.StatisticsViewModel
 @Composable
 fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewModel, statisticsViewModel: StatisticsViewModel, sharedPref: SharedPreferences) {
     var navigationSelectedItem by remember { mutableIntStateOf(0) }
+    val context = LocalContext.current
 
     // Listen for navigation changes
     var showBottomBar by remember { mutableStateOf(false) }
     navController.addOnDestinationChangedListener { _, destination, _ ->
-        showBottomBar = destination.route in BottomNavigationItem.bottomNavigationItems().map { it.route }
+        showBottomBar = destination.route in BottomNavigationItem.bottomNavigationItems(context).map { it.route }
     }
 
     Scaffold(
@@ -41,7 +45,7 @@ fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewMod
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar {
-                    BottomNavigationItem.bottomNavigationItems().forEachIndexed { index, navigationItem ->
+                    BottomNavigationItem.bottomNavigationItems(context).forEachIndexed { index, navigationItem ->
                         NavigationBarItem(
                             selected = index == navigationSelectedItem,
                             label = { Text(navigationItem.label) },
@@ -75,24 +79,24 @@ fun BottomNavigationBar(navController: NavHostController, viewModel: MainViewMod
 data class BottomNavigationItem(
     val label: String,
     val icon: Int,
-    val route: String
+    val route: String,
 ) {
     companion object {
         // Function to get the list of bottom navigation items
-        fun bottomNavigationItems(): List<BottomNavigationItem> {
+        fun bottomNavigationItems(context: Context): List<BottomNavigationItem> {
             return listOf(
                 BottomNavigationItem(
-                    label = "Run",
+                    label = getString(context, R.string.run),
                     icon = R.drawable.ic_run,
                     route = RunTrackerDestinations.RUN_SCREEN
                 ),
                 BottomNavigationItem(
-                    label = "Statistics",
+                    label = getString(context, R.string.statistics),
                     icon = R.drawable.ic_graph,
                     route = RunTrackerDestinations.STATISTICS_SCREEN
                 ),
                 BottomNavigationItem(
-                    label = "Settings",
+                    label = getString(context, R.string.settings),
                     icon = R.drawable.ic_settings,
                     route = RunTrackerDestinations.SETTINGS_SCREEN
                 )

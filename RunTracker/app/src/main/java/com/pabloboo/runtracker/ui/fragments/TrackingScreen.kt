@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.getString
 import androidx.lifecycle.Observer
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -75,6 +76,8 @@ fun TrackingScreen(
         timerText = formattedTime
     }
 
+    val context = LocalContext.current
+
     Column(
         modifier = Modifier.fillMaxSize().background(colorScheme.background)
     ) {
@@ -86,7 +89,7 @@ fun TrackingScreen(
                 .background(colorScheme.primary)
         ) {
             Text(
-                text = "Let's go, $name!",
+                text = getString(context, R.string.lets_go) + ", $name!",
                 fontSize = 18.sp,
                 textAlign = TextAlign.Left,
                 color = colorScheme.onPrimary,
@@ -98,7 +101,7 @@ fun TrackingScreen(
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
                     tint = colorScheme.onPrimary,
-                    contentDescription = "Cancel Run",
+                    contentDescription = getString(context, R.string.cancel_run),
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
                         .padding(10.dp)
@@ -158,7 +161,7 @@ fun TrackingScreen(
                     modifier = Modifier
                         .align(Alignment.Center)
                 ) {
-                    Text(text = "Start")
+                    Text(text = getString(context, R.string.start))
                 }
             }
 
@@ -188,7 +191,7 @@ fun TrackingScreen(
                     ),
                     modifier = Modifier.align(Alignment.CenterEnd).padding(10.dp)
                 ) {
-                    Text(text = "Finish Run")
+                    Text(text = getString(context, R.string.finish_run))
                 }
             }
         }
@@ -201,13 +204,13 @@ fun TrackingScreen(
                             onGoBack()
                         }
                     ) {
-                        Text(text = "Go to runs")
+                        Text(text = getString(context, R.string.go_to_runs))
                     }
                 },
                 containerColor = colorScheme.secondary,
                 contentColor = colorScheme.onSecondary
             ) {
-                Text(text = "Run Finished!")
+                Text(text = getString(context, R.string.run_finished))
             }
         }
     }
@@ -327,12 +330,12 @@ fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onGoBack: () -> Unit) {
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = { onDismiss() },
-        title = { Text(text = "Cancel the Run") },
-        text = { Text(text = "Are you sure you want to cancel the run and delete all its data?") },
+        title = { Text(text = getString(context, R.string.cancel_the_run)) },
+        text = { Text(text = getString(context, R.string.cancel_the_run_confirmation)) },
         icon = {
             Icon(
                 painter = painterResource(id = R.drawable.ic_delete),
-                contentDescription = "Delete",
+                contentDescription = getString(context, R.string.delete),
                 tint = colorScheme.tertiary
             )
         },
@@ -344,7 +347,7 @@ fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onGoBack: () -> Unit) {
                     onGoBack()
                 }
             ) {
-                Text(text = "Yes")
+                Text(text = getString(context, R.string.yes))
             }
         },
         dismissButton = {
@@ -354,7 +357,7 @@ fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onGoBack: () -> Unit) {
                     onDismiss()
                 }
             ) {
-                Text(text = "No")
+                Text(text = getString(context, R.string.no))
             }
         }
     )
