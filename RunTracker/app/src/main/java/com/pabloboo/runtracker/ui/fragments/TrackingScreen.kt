@@ -9,10 +9,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
@@ -76,19 +76,20 @@ fun TrackingScreen(
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize().background(colorScheme.background)
     ) {
         // Top Bar
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp)
-                .background(Color(0xFF1976D2))
+                .background(colorScheme.primary)
         ) {
             Text(
                 text = "Let's go, $name!",
                 fontSize = 18.sp,
                 textAlign = TextAlign.Left,
+                color = colorScheme.onPrimary,
                 modifier = Modifier
                     .align(Alignment.CenterStart)
                     .padding(10.dp)
@@ -96,6 +97,7 @@ fun TrackingScreen(
             if (isRunning) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
+                    tint = colorScheme.onPrimary,
                     contentDescription = "Cancel Run",
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
@@ -130,7 +132,7 @@ fun TrackingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp)
-                .background(Color(0xFF1976D2)),
+                .background(colorScheme.primary),
             contentAlignment = Alignment.Center
         ) {
             // Timer Text
@@ -138,7 +140,7 @@ fun TrackingScreen(
                 Text(
                     text = timerText,
                     fontSize = 30.sp,
-                    color = Color.White,
+                    color = colorScheme.onPrimary,
                     modifier = Modifier.align(Alignment.CenterStart).padding(10.dp)
                 )
             }
@@ -149,6 +151,10 @@ fun TrackingScreen(
                     onClick = {
                         onToggleRun()
                     },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.onPrimary,
+                        contentColor = colorScheme.primary
+                    ),
                     modifier = Modifier
                         .align(Alignment.Center)
                 ) {
@@ -176,6 +182,10 @@ fun TrackingScreen(
                         onFinishRun()
                         runFinished = true
                     },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.onPrimary,
+                        contentColor = colorScheme.primary
+                    ),
                     modifier = Modifier.align(Alignment.CenterEnd).padding(10.dp)
                 ) {
                     Text(text = "Finish Run")
@@ -193,7 +203,9 @@ fun TrackingScreen(
                     ) {
                         Text(text = "Go to runs")
                     }
-                }
+                },
+                containerColor = colorScheme.secondary,
+                contentColor = colorScheme.onSecondary
             ) {
                 Text(text = "Run Finished!")
             }
@@ -255,7 +267,7 @@ fun Map(
         ) {
             Polyline(
                 points = pathPointsValues,
-                color = Color.Red,
+                color = colorScheme.tertiary,
                 width = POLYLINE_WIDTH
             )
 
@@ -321,7 +333,7 @@ fun ShowCancelTrackingDialog(onDismiss: () -> Unit, onGoBack: () -> Unit) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_delete),
                 contentDescription = "Delete",
-                tint = Color.Red
+                tint = colorScheme.tertiary
             )
         },
         confirmButton = {

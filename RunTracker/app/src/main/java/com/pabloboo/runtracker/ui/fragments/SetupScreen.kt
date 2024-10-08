@@ -1,6 +1,7 @@
 package com.pabloboo.runtracker.ui.fragments
 
 import android.content.SharedPreferences
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Snackbar
@@ -21,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
@@ -63,6 +65,7 @@ fun SetupScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(colorScheme.background)
                     .padding(paddingValues)
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -70,8 +73,9 @@ fun SetupScreen(
             ) {
                 Text(
                     text = "Welcome!\nPlease enter your name and weight.",
-                    fontSize = 36.sp,
+                    fontSize = 30.sp,
                     textAlign = TextAlign.Center,
+                    color = colorScheme.onBackground,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 32.dp)
@@ -113,7 +117,8 @@ fun SetupScreen(
                     )
                     Text(
                         text = "kg",
-                        fontSize = 24.sp
+                        fontSize = 24.sp,
+                        color = colorScheme.onBackground,
                     )
                 }
 
@@ -130,18 +135,22 @@ fun SetupScreen(
                             } else {
                                 showSnackbarError = true
                             }
-                        }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary)
                     ) {
                         Text(
                             "Continue",
                             fontSize = 22.sp,
-                            color = Color.White
+                            color = colorScheme.onPrimary
                         )
                     }
                 }
 
                 if (showSnackbarError) {
-                    Snackbar() {
+                    Snackbar(
+                        containerColor = colorScheme.tertiary,
+                        contentColor = colorScheme.onTertiary
+                    ) {
                         Text(text = "Fill in all the fields correctly!")
                     }
                 }

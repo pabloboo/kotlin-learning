@@ -1,7 +1,9 @@
 package com.pabloboo.runtracker.ui.fragments
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -10,7 +12,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -62,6 +63,7 @@ fun StatisticsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colorScheme.background)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -112,12 +114,12 @@ fun StatSection(title: String, value: String) {
             text = value,
             fontSize = 40.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.Black
+            color = colorScheme.onBackground
         )
         Text(
             text = title,
             fontSize = 16.sp,
-            color = Color.Gray
+            color = colorScheme.onBackground
         )
     }
 }
@@ -131,32 +133,33 @@ fun BarChartComposable(chartData: List<BarEntry>, runs: List<Run>) {
             .fillMaxWidth()
             .height(500.dp)
     ) {
+        val onBackgroundColor = colorScheme.onBackground.toArgb()
         AndroidView(
             factory = { context ->
                 BarChart(context).apply {
                     val barDataSet = BarDataSet(chartData, "Distance Over Time").apply {
-                        valueTextColor = Color.Black.toArgb()
-                        color = Color(0xFFBB86FC).toArgb()
+                        valueTextColor = onBackgroundColor
+                        color = onBackgroundColor
                     }
                     data = BarData(barDataSet)
 
                     xAxis.apply {
                         position = XAxis.XAxisPosition.BOTTOM
                         setDrawLabels(false)
-                        axisLineColor = Color.Black.toArgb()
-                        textColor = Color.Black.toArgb()
+                        axisLineColor = onBackgroundColor
+                        textColor = onBackgroundColor
                         setDrawGridLines(false)
                     }
 
                     axisLeft.apply {
-                        axisLineColor = Color.Black.toArgb()
-                        textColor = Color.Black.toArgb()
+                        axisLineColor = onBackgroundColor
+                        textColor = onBackgroundColor
                         setDrawGridLines(false)
                     }
 
                     axisRight.apply {
-                        axisLineColor = Color.Black.toArgb()
-                        textColor = Color.Black.toArgb()
+                        axisLineColor = onBackgroundColor
+                        textColor = onBackgroundColor
                         setDrawGridLines(false)
                     }
 

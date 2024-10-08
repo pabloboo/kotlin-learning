@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Build
 import android.provider.Settings
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -35,7 +37,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -98,17 +99,20 @@ fun RunScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                if (hasLocationPermissions(context)) {
-                    onAddRunClick()
-                } else {
-                    requestPermissions(context)
-                }
-            }) {
+            FloatingActionButton(
+                onClick = {
+                    if (hasLocationPermissions(context)) {
+                        onAddRunClick()
+                    } else {
+                        requestPermissions(context)
+                    }
+                },
+                containerColor = colorScheme.primary
+            ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add),
                     contentDescription = "Add Run",
-                    tint = Color.Black
+                    tint = colorScheme.onPrimary
                 )
             }
         },
@@ -117,6 +121,7 @@ fun RunScreen(
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(colorScheme.background)
                     .padding(paddingValues)
                     .padding(horizontal = 16.dp, vertical = 8.dp)
             ) {
@@ -127,7 +132,8 @@ fun RunScreen(
                 ) {
                     Text(
                         text = "Sort by:",
-                        fontSize = 16.sp
+                        fontSize = 16.sp,
+                        color = colorScheme.onBackground
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     DropdownMenu(
@@ -200,6 +206,7 @@ fun RunItem(run: Run, onClick: (Run) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .background(colorScheme.surface)
             .padding(8.dp)
     ) {
         // Image
@@ -223,8 +230,8 @@ fun RunItem(run: Run, onClick: (Run) -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = date, fontSize = 16.sp)
-            Text(text = time, fontSize = 16.sp)
+            Text(text = date, fontSize = 16.sp, color = colorScheme.onSurface)
+            Text(text = time, fontSize = 16.sp, color = colorScheme.onSurface)
         }
 
         Row(
@@ -232,9 +239,9 @@ fun RunItem(run: Run, onClick: (Run) -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "${run.distanceInMeters / 1000f} km", fontSize = 16.sp)
-            Text(text = "${run.avgSpeedInKMH} km/h", fontSize = 16.sp)
-            Text(text = "${run.caloriesBurned} cal", fontSize = 16.sp)
+            Text(text = "${run.distanceInMeters / 1000f} km", fontSize = 16.sp, color = colorScheme.onSurface)
+            Text(text = "${run.avgSpeedInKMH} km/h", fontSize = 16.sp, color = colorScheme.onSurface)
+            Text(text = "${run.caloriesBurned} cal", fontSize = 16.sp, color = colorScheme.onSurface)
         }
     }
 }

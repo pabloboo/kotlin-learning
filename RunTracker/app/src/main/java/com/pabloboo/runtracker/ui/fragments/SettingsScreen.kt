@@ -1,9 +1,11 @@
 package com.pabloboo.runtracker.ui.fragments
 
 import android.content.SharedPreferences
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +40,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(colorScheme.background)
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -81,18 +84,25 @@ fun SettingsScreen(
                     showSnackBarSuccess = false
                 }
             },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = colorScheme.primary)
         ) {
             Text("Apply Changes")
         }
 
         if (showSnackbarError) {
-            Snackbar() {
+            Snackbar(
+                containerColor = colorScheme.tertiary,
+                contentColor = colorScheme.onTertiary
+            ) {
                 Text(text = "Fill in all the fields correctly!")
             }
         }
         if (showSnackBarSuccess) {
-            Snackbar() {
+            Snackbar(
+                containerColor = colorScheme.secondary,
+                contentColor = colorScheme.onSecondary
+            ) {
                 Text(text = "Changes saved!")
             }
         }
