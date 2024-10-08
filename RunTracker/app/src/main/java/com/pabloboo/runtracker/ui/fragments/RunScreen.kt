@@ -19,7 +19,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
@@ -99,7 +98,13 @@ fun RunScreen(
 
     Scaffold(
         floatingActionButton = {
-            FloatingActionButton(onClick = onAddRunClick) {
+            FloatingActionButton(onClick = {
+                if (hasLocationPermissions(context)) {
+                    onAddRunClick()
+                } else {
+                    requestPermissions(context)
+                }
+            }) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_add),
                     contentDescription = "Add Run",
