@@ -46,4 +46,6 @@
     <string name="record_21k">Record 21km</string>
     <string name="total_number_of_runs">Número de carreras</string>
     <string name="average_time_per_km">Tiempo medio por km</string>
+    <string name="current_week_total_distance">Distancia total de la semana actual</string>
+    <string name="last_week_total_distance">comparado con la semana anterior</string>
 </resources>

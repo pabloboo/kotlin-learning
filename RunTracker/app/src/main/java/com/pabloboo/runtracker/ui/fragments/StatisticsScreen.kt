@@ -33,6 +33,8 @@ import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.ui.viewmodels.StatisticsViewModel
 import com.pabloboo.runtracker.utils.CustomMarkerView
+import com.pabloboo.runtracker.utils.DataFunctions.getTotalKmOfCurrentWeek
+import com.pabloboo.runtracker.utils.DataFunctions.getTotalKmOfPastWeek
 import com.pabloboo.runtracker.utils.DataFunctions.kmhToMinPerKm
 import com.pabloboo.runtracker.utils.TrackingUtility
 import kotlin.math.round
@@ -138,6 +140,20 @@ fun StatisticsScreen(
 
         // Bar Chart
         BarChartComposable(barData, runs.value)
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        // Current week's total distance Section
+        StatSection(
+            title = getString(context, R.string.current_week_total_distance),
+            value = getTotalKmOfCurrentWeek(runs.value).toString() + "km"
+        )
+        Spacer(modifier = Modifier.height(12.dp))
+        Text(
+            text = "${getTotalKmOfCurrentWeek(runs.value) - getTotalKmOfPastWeek(runs.value)}km " + getString(context, R.string.last_week_total_distance),
+            fontSize = 16.sp,
+            color = colorScheme.onBackground
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
