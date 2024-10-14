@@ -45,4 +45,5 @@
     <string name="record_10k">Record 10km</string>
     <string name="record_21k">Record 21km</string>
     <string name="total_number_of_runs">Número de carreras</string>
+    <string name="average_time_per_km">Tiempo medio por km</string>
 </resources>

@@ -46,4 +46,5 @@
     <string name="record_10k">10k record</string>
     <string name="record_21k">21k record</string>
     <string name="total_number_of_runs">Number of runs</string>
+    <string name="average_time_per_km">Average time per km</string>
 </resources>

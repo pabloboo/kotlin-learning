@@ -50,6 +50,7 @@ import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.REQUEST_CODE_LOCATION_PERMISSION
+import com.pabloboo.runtracker.utils.DataFunctions.kmhToMinPerKm
 import com.pabloboo.runtracker.utils.SortType
 import com.pabloboo.runtracker.utils.TrackingUtility.hasDeniedPermissionsPermanently
 import com.pabloboo.runtracker.utils.TrackingUtility.hasLocationPermissions
@@ -269,6 +270,7 @@ fun RunItem(run: Run, onClick: (Run) -> Unit, viewModel: MainViewModel) {
         ) {
             Text(text = date, fontSize = 16.sp, color = colorScheme.onSurface)
             Text(text = time, fontSize = 16.sp, color = colorScheme.onSurface)
+            Text(text = "${run.distanceInMeters / 1000f} km", fontSize = 16.sp, color = colorScheme.onSurface)
         }
 
         Row(
@@ -276,7 +278,7 @@ fun RunItem(run: Run, onClick: (Run) -> Unit, viewModel: MainViewModel) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "${run.distanceInMeters / 1000f} km", fontSize = 16.sp, color = colorScheme.onSurface)
+            Text(text = "${kmhToMinPerKm(run.avgSpeedInKMH)} min/km", fontSize = 16.sp, color = colorScheme.onSurface)
             Text(text = "${run.avgSpeedInKMH} km/h", fontSize = 16.sp, color = colorScheme.onSurface)
             Text(text = "${run.caloriesBurned} cal", fontSize = 16.sp, color = colorScheme.onSurface)
         }

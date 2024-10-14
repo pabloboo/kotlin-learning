@@ -33,6 +33,7 @@ import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.ui.viewmodels.StatisticsViewModel
 import com.pabloboo.runtracker.utils.CustomMarkerView
+import com.pabloboo.runtracker.utils.DataFunctions.kmhToMinPerKm
 import com.pabloboo.runtracker.utils.TrackingUtility
 import kotlin.math.round
 
@@ -69,6 +70,10 @@ fun StatisticsScreen(
     var formattedSpeed = "0km/h"
     if (totalAvgSpeed.value != null) {
         formattedSpeed = "${round(totalAvgSpeed.value!! * 10f) / 10f}km/h"
+    }
+    var formattedMinKm = "0min/km"
+    if (totalAvgSpeed.value != null) {
+        formattedMinKm = "${round(kmhToMinPerKm(totalAvgSpeed.value!!) * 10f) / 10f}min/km"
     }
 
     val barData = runs.value.indices.map { i -> BarEntry(i.toFloat(), runs.value[i].distanceInMeters.toFloat()/1000f) }
@@ -111,6 +116,14 @@ fun StatisticsScreen(
         StatSection(
             title = getString(context, R.string.total_calories_burned),
             value = formattedCalories
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Min/km Section
+        StatSection(
+            title = getString(context, R.string.average_time_per_km),
+            value = formattedMinKm
         )
 
         Spacer(modifier = Modifier.height(16.dp))
