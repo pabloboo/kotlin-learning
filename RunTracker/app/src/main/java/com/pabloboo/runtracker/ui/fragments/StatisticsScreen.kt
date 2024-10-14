@@ -42,6 +42,7 @@ fun StatisticsScreen(
 ) {
     val totalTimeRun = viewModel.totalTimeRun.observeAsState()
     val totalDistance = viewModel.totalDistance.observeAsState()
+    val totalNumberOfRuns = viewModel.totalNumberOfRuns.observeAsState()
     val totalCalories = viewModel.totalCaloriesBurned.observeAsState()
     val totalAvgSpeed = viewModel.totalAvgSpeed.observeAsState()
     val runs = viewModel.runsSortedByDateAscending.observeAsState(initial = emptyList())
@@ -56,6 +57,10 @@ fun StatisticsScreen(
     var formattedDistance = "0km"
     if (totalDistance.value != null) {
         formattedDistance = "${round(((totalDistance.value!! / 1000f) * 10f)) / 10f}km"
+    }
+    var formattedNumberOfRuns = "0"
+    if (totalNumberOfRuns.value != null) {
+        formattedNumberOfRuns = "${totalNumberOfRuns.value}"
     }
     var formattedCalories = "0kcal"
     if (totalCalories.value != null) {
@@ -90,6 +95,14 @@ fun StatisticsScreen(
         StatSection(
             title = getString(context, R.string.total_time),
             value = formattedTotalTime
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Total Number of Runs Section
+        StatSection(
+            title = getString(context, R.string.total_number_of_runs),
+            value = formattedNumberOfRuns
         )
 
         Spacer(modifier = Modifier.height(16.dp))

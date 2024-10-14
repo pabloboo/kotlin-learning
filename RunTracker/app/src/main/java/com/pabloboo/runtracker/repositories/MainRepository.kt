@@ -34,6 +34,8 @@ class MainRepository @Inject constructor(
 
     fun getTotalTimeInMillis() = runDAO.getTotalTimeInMillis()
 
+    fun getTotalNumberOfRuns() = runDAO.getTotalNumberOfRuns()
+
     fun get5000MetersRecord() = runDAO.get5000MetersRecord()
 
     fun get10000MetersRecord() = runDAO.get10000MetersRecord()

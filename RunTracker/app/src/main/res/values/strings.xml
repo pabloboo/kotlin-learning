@@ -14,7 +14,7 @@
     <string name="avg_speed">Avg speed</string>
     <string name="distance">Distance</string>
     <string name="calories_burned">Calories burned</string>
-    <string name="need_to_accept_location_permissions">You need to accept location permissions to use this app.</string>
+    <string name="need_to_accept_location_permissions">Run Tracker collects location data to enable tracking of your runs even when the app is closed or not in use. This allows us to provide accurate statistics and insights about your performance.</string>
     <string name="open_settings">Open Settings</string>
     <string name="add_run">Add Run</string>
     <string name="sort_by">Sort by:</string>
@@ -45,4 +45,5 @@
     <string name="record_5k">5k record</string>
     <string name="record_10k">10k record</string>
     <string name="record_21k">21k record</string>
+    <string name="total_number_of_runs">Number of runs</string>
 </resources>

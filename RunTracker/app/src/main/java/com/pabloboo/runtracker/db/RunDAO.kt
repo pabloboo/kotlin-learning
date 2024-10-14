@@ -45,6 +45,9 @@ interface RunDAO {
     @Query("SELECT SUM(timeInMillis) FROM running_table")
     fun getTotalTimeInMillis(): LiveData<Long>
 
+    @Query("SELECT COUNT(*) FROM running_table")
+    fun getTotalNumberOfRuns(): LiveData<Int>
+
     @Query("SELECT SUM(caloriesBurned) FROM running_table")
     fun getTotalCaloriesBurned(): LiveData<Int>
 

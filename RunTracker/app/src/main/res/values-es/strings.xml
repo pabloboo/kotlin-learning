@@ -13,7 +13,7 @@
     <string name="avg_speed">Velocidad Promedio</string>
     <string name="distance">Distancia</string>
     <string name="calories_burned">Calorías quemadas</string>
-    <string name="need_to_accept_location_permissions">Necesitas aceptar los permisos de ubicación para usar esta aplicación.</string>
+    <string name="need_to_accept_location_permissions">Run Tracker recopila datos de ubicación para permitir el seguimiento de sus carreras incluso cuando la aplicación está cerrada o no está en uso. Esto nos permite proporcionar estadísticas e información precisas sobre su desempeño.</string>
     <string name="open_settings">Abrir Configuraciones</string>
     <string name="add_run">Agregar Carrera</string>
     <string name="sort_by">Ordenar por:</string>
@@ -44,4 +44,5 @@
     <string name="record_5k">Record 5km</string>
     <string name="record_10k">Record 10km</string>
     <string name="record_21k">Record 21km</string>
+    <string name="total_number_of_runs">Número de carreras</string>
 </resources>
