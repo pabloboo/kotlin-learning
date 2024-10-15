@@ -83,10 +83,6 @@ fun RunTrackerNavGraph(
         composable(RunTrackerDestinations.SETTINGS_SCREEN) {
             SettingsScreen(
                 sharedPref = sharedPref,
-                onFinishSaving = {
-                    navController.popBackStack(navController.graph.startDestinationId, false)
-                    RunTrackerNavigationActions(navController).navigateToRunScreen()
-                },
                 viewModel = viewModel
             )
         }

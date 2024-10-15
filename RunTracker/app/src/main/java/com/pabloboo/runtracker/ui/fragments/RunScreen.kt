@@ -37,6 +37,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,10 +51,14 @@ import com.pabloboo.runtracker.R
 import com.pabloboo.runtracker.db.Run
 import com.pabloboo.runtracker.ui.viewmodels.MainViewModel
 import com.pabloboo.runtracker.utils.Constants.REQUEST_CODE_LOCATION_PERMISSION
+import com.pabloboo.runtracker.utils.Constants.SUCCESS_MESSAGE
+import com.pabloboo.runtracker.utils.CustomSnackbarHost
 import com.pabloboo.runtracker.utils.DataFunctions.kmhToMinPerKm
 import com.pabloboo.runtracker.utils.SortType
 import com.pabloboo.runtracker.utils.TrackingUtility.hasDeniedPermissionsPermanently
 import com.pabloboo.runtracker.utils.TrackingUtility.hasLocationPermissions
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import pub.devrel.easypermissions.EasyPermissions
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -86,6 +91,10 @@ fun RunScreen(
     }
 
     val runs by viewModel.runs.observeAsState(initial = emptyList())
+
+    val coroutineScope = rememberCoroutineScope()
+    val snackbarHostStateMessages = remember { SnackbarHostState() }
+    var snackbarMessageType by remember { mutableStateOf(SUCCESS_MESSAGE) }
 
     if (!hasLocationPermissions(context)) {
         requestPermissions(context)
@@ -167,11 +176,26 @@ fun RunScreen(
 
                 Spacer(modifier = Modifier.height(8.dp))
 
+                CustomSnackbarHost(
+                    snackbarHostState = snackbarHostStateMessages,
+                    snackbarMessageType = snackbarMessageType,
+                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                )
+
                 LazyColumn(
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(runs.size) { run ->
-                        RunItem(run = runs[run], onClick = onRunClick, viewModel = viewModel)
+                        RunItem(
+                            run = runs[run],
+                            onClick = onRunClick,
+                            onDelete = {
+                                coroutineScope.launch {
+                                    snackbarMessageType = SUCCESS_MESSAGE
+                                    snackbarHostStateMessages.showSnackbar(getString(context, R.string.run_deleted))
+                                }
+                            },
+                            viewModel = viewModel)
                         Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
@@ -214,7 +238,7 @@ fun DropdownMenu(
 }
 
 @Composable
-fun RunItem(run: Run, onClick: (Run) -> Unit, viewModel: MainViewModel) {
+fun RunItem(run: Run, onClick: (Run) -> Unit, onDelete: () -> Unit, viewModel: MainViewModel) {
     var showDeleteRunDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -243,6 +267,7 @@ fun RunItem(run: Run, onClick: (Run) -> Unit, viewModel: MainViewModel) {
             ShowDeleteRunDialog(
                 onDismiss = { showDeleteRunDialog = false },
                 viewModel = viewModel,
+                onDelete = onDelete,
                 run = run
             )
         }
@@ -286,7 +311,7 @@ fun RunItem(run: Run, onClick: (Run) -> Unit, viewModel: MainViewModel) {
 }
 
 @Composable
-fun ShowDeleteRunDialog(onDismiss: () -> Unit, viewModel: MainViewModel, run: Run) {
+fun ShowDeleteRunDialog(onDismiss: () -> Unit, onDelete: () -> Unit, viewModel: MainViewModel, run: Run) {
     val context = LocalContext.current
     AlertDialog(
         onDismissRequest = { onDismiss() },
@@ -304,6 +329,7 @@ fun ShowDeleteRunDialog(onDismiss: () -> Unit, viewModel: MainViewModel, run: Ru
                 onClick = {
                     // Delete the run
                     viewModel.deleteRun(run)
+                    onDelete()
                     onDismiss()
                 }
             ) {

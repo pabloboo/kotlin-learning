@@ -57,4 +57,5 @@
     <string name="write_permission_not_granted">Permiso de escritura no concedido. No se puede guardar el archivo</string>
     <string name="runs_imported_correctly">Carreras importadas correctamente</string>
     <string name="error_importing_runs">Error al importar el archivo</string>
+    <string name="run_deleted">Carrera borrada</string>
 </resources>

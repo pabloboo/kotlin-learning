@@ -27,6 +27,7 @@ import com.pabloboo.runtracker.utils.Constants.KEY_FIRST_TIME_TOGGLE
 import com.pabloboo.runtracker.utils.Constants.KEY_NAME
 import com.pabloboo.runtracker.utils.Constants.KEY_WEIGHT
 import com.pabloboo.runtracker.utils.Constants.SUCCESS_MESSAGE
+import com.pabloboo.runtracker.utils.CustomSnackbarHost
 import com.pabloboo.runtracker.utils.ExportAndImportData.exportRunsToJson
 import com.pabloboo.runtracker.utils.ExportAndImportData.importRunsFromJson
 import kotlinx.coroutines.launch
@@ -34,13 +35,10 @@ import kotlinx.coroutines.launch
 @Composable
 fun SettingsScreen(
     sharedPref: SharedPreferences,
-    onFinishSaving: () -> Unit,
     viewModel: MainViewModel
 ) {
     var name by remember { mutableStateOf(sharedPref.getString(KEY_NAME, "") ?: "") }
     var weight by remember { mutableStateOf(sharedPref.getFloat(KEY_WEIGHT, 80f).toString()) }
-    var showSnackbarError by remember { mutableStateOf(false) }
-    var showSnackBarSuccess by remember { mutableStateOf(false) }
 
     fun writePersonalDataToSharedPref(): Boolean {
         if (name.isNotEmpty() && weight.isNotEmpty() && name.isNotBlank() && weight.isNotBlank() && weight.toFloatOrNull() != null) {
@@ -127,13 +125,17 @@ fun SettingsScreen(
         Button(
             onClick = {
                 if (writePersonalDataToSharedPref()) {
-                    showSnackbarError = false
-                    showSnackBarSuccess = true
-                    onFinishSaving()
+                    // Show success message
+                    coroutineScope.launch {
+                        snackbarMessageType = SUCCESS_MESSAGE
+                        snackbarHostState.showSnackbar(getString(context, R.string.changes_saved))
+                    }
                 } else {
                     // Show error message
-                    showSnackbarError = true
-                    showSnackBarSuccess = false
+                    coroutineScope.launch {
+                        snackbarMessageType = ERROR_MESSAGE
+                        snackbarHostState.showSnackbar(getString(context, R.string.fill_in_all_fields_correctly))
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth(),
@@ -175,33 +177,10 @@ fun SettingsScreen(
             Text(text = getString(context, R.string.import_runs))
         }
 
-        SnackbarHost(
-            hostState = snackbarHostState,
-            snackbar = { snackbarData ->
-                Snackbar(
-                    snackbarData = snackbarData,
-                    containerColor = if (snackbarMessageType == ERROR_MESSAGE) colorScheme.tertiary else colorScheme.secondary,
-                    contentColor = if (snackbarMessageType == ERROR_MESSAGE) colorScheme.onTertiary else colorScheme.onSecondary
-                )
-            },
+        CustomSnackbarHost(
+            snackbarHostState = snackbarHostState,
+            snackbarMessageType = snackbarMessageType,
             modifier = Modifier.align(Alignment.CenterHorizontally)
         )
-
-        if (showSnackbarError) {
-            Snackbar(
-                containerColor = colorScheme.tertiary,
-                contentColor = colorScheme.onTertiary
-            ) {
-                Text(text = getString(context, R.string.fill_in_all_fields_correctly))
-            }
-        }
-        if (showSnackBarSuccess) {
-            Snackbar(
-                containerColor = colorScheme.secondary,
-                contentColor = colorScheme.onSecondary
-            ) {
-                Text(text = getString(context, R.string.changes_saved))
-            }
-        }
     }
 }

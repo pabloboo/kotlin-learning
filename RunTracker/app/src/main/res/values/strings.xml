@@ -58,4 +58,5 @@
     <string name="write_permission_not_granted">Write permission not granted. Cannot save the file.</string>
     <string name="runs_imported_correctly">Runs imported correctly</string>
     <string name="error_importing_runs">Error when importing the file</string>
+    <string name="run_deleted">Run deleted</string>
 </resources>
