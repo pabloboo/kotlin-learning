@@ -300,7 +300,7 @@ fun BarChartComposable(chartData: List<BarEntry>, runs: List<Run>) {
             Box(
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(start = (entry.x * 50).dp, top = 16.dp)
+                    .padding(start = 50.dp, top = 16.dp)
             ) {
                 CustomMarkerView(curRun)
             }
