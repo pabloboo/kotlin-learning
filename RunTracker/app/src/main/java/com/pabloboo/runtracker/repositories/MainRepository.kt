@@ -8,7 +8,11 @@ class MainRepository @Inject constructor(
     private val runDAO: RunDAO
 ) {
 
+    fun getRunById(id: Int) = runDAO.getRunById(id)
+
     suspend fun insertRun(run: Run) = runDAO.insertRun(run)
+
+    suspend fun insertRuns(runs: List<Run>) = runDAO.insertRuns(runs)
 
     suspend fun deleteRun(run: Run) = runDAO.deleteRun(run)
 

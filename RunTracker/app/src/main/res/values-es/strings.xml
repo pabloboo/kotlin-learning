@@ -48,4 +48,13 @@
     <string name="average_time_per_km">Tiempo medio por km</string>
     <string name="current_week_total_distance">Distancia total de la semana actual</string>
     <string name="last_week_total_distance">comparado con la semana anterior</string>
+    <string name="export_runs">Exportar carreras</string>
+    <string name="import_runs">Importar carreras</string>
+    <string name="write_permission_denied">Permiso de escritura denegado</string>
+    <string name="runs_saved_in">Carreras guardadas en</string>
+    <string name="error_when_writing_to_the_file">Error al escribir en el archivo</string>
+    <string name="the_file_couldnt_be_created">El archivo no pudo ser creado</string>
+    <string name="write_permission_not_granted">Permiso de escritura no concedido. No se puede guardar el archivo</string>
+    <string name="runs_imported_correctly">Carreras importadas correctamente</string>
+    <string name="error_importing_runs">Error al importar el archivo</string>
 </resources>

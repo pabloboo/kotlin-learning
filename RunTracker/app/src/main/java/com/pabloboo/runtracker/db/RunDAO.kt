@@ -10,8 +10,14 @@ import androidx.room.Query
 @Dao
 interface RunDAO {
 
+    @Query("SELECT * FROM running_table WHERE id = :id")
+    fun getRunById(id: Int): Run?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRun(run: Run)
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRuns(runs: List<Run>)
 
     @Delete
     suspend fun deleteRun(run: Run)

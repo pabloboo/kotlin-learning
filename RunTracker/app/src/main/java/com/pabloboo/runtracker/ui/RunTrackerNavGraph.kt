@@ -86,7 +86,8 @@ fun RunTrackerNavGraph(
                 onFinishSaving = {
                     navController.popBackStack(navController.graph.startDestinationId, false)
                     RunTrackerNavigationActions(navController).navigateToRunScreen()
-                }
+                },
+                viewModel = viewModel
             )
         }
 

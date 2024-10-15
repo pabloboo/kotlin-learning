@@ -142,4 +142,7 @@ dependencies {
 
     // Jetpack Compose navigation
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.gson)
+
 }

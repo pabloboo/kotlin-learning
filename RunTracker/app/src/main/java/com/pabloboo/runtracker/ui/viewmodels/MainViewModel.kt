@@ -63,8 +63,14 @@ class MainViewModel @Inject constructor(
         this.sortType = sortType
     }
 
+    fun getRunById(id: Int) = mainRepository.getRunById(id)
+
     fun insertRun(run: Run) = viewModelScope.launch {
         mainRepository.insertRun(run)
+    }
+
+    fun insertRuns(runs: List<Run>) = viewModelScope.launch {
+        mainRepository.insertRuns(runs)
     }
 
     fun deleteRun(run: Run) = viewModelScope.launch {

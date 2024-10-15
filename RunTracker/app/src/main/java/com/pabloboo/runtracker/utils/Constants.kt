@@ -15,6 +15,8 @@ object Constants {
     const val POLYLINE_WIDTH = 8f
     const val MAP_ZOOM = 18f
     const val TIMER_UPDATE_INTERVAL = 50L
+    const val SUCCESS_MESSAGE = "Success"
+    const val ERROR_MESSAGE = "Error"
 
     const val SHARED_PREF_NAME = "sharedPref"
     const val KEY_FIRST_TIME_TOGGLE = "KEY_FIRST_TIME_TOGGLE"

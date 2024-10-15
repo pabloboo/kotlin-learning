@@ -49,4 +49,13 @@
     <string name="average_time_per_km">Average time per km</string>
     <string name="current_week_total_distance">Current week\'s total distance</string>
     <string name="last_week_total_distance">compared to the previous week</string>
+    <string name="export_runs">Export runs</string>
+    <string name="import_runs">Import runs</string>
+    <string name="write_permission_denied">Write permission denied</string>
+    <string name="runs_saved_in">Runs saved in</string>
+    <string name="error_when_writing_to_the_file">Error when writing to the file</string>
+    <string name="the_file_couldnt_be_created">The file couldn\'t be created</string>
+    <string name="write_permission_not_granted">Write permission not granted. Cannot save the file.</string>
+    <string name="runs_imported_correctly">Runs imported correctly</string>
+    <string name="error_importing_runs">Error when importing the file</string>
 </resources>
